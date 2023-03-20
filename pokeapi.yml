@@ -1,0 +1,390 @@
+openapi: '3.0.2'
+info:
+  title: PokeAPI
+  version: '2.0'
+servers:
+  - url: https://pokeapi.co/api/v2
+paths:
+  /pokemon:
+    get:
+      tags:
+        - pokemon
+      operationId: getPokemon
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+                    example: 1281
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                    example: https://pokeapi.co/api/v2/pokemon?offset=20&limit=20
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        url: 
+                          type: string
+                          format: uri
+                      required:
+                        - name
+                        - url
+                    example:
+                      - name: bulbasaur
+                        url: https://pokeapi.co/api/v2/pokemon/1/
+                      - name: ivysaur
+                        url: https://pokeapi.co/api/v2/pokemon/2/
+                required:
+                  - count
+                  - next
+                  - previous
+                  - results
+  /pokemon/{id}:
+    get:
+      tags:
+        - pokemon
+      operationId: getPokemonById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The identifier for this resource.
+                  name:
+                    type: string
+                    description: The name for this resource.
+                  base_experience:
+                    type: integer
+                    description: The base experience gained for defeating this Pokémon.
+                  height:
+                    type: integer
+                    description: The height of this Pokémon in decimetres.
+                  is_default:
+                    type: boolean
+                    description: Set for exactly one Pokémon used as the default for each species.
+                  order:
+                    type: integer
+                    description: Order for sorting. Almost national order, except families are grouped together.
+                  weight:
+                    type: integer
+                    description: The weight of this Pokémon in hectograms.
+                  abilities:
+                    description: A list of abilities this Pokémon could potentially have.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PokemonAbility'
+                  forms:
+                    description: A list of forms this Pokémon can take on.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NamedAPIResource'
+                required:
+                  - id
+                example:
+                  id: 35
+                  name: clefairy
+                  base_experience: 113
+                  height: 6
+                  is_default: false
+                  order: 56
+                  example: 75
+                  abilities:
+                    - is_hidden: true
+                      slot: 3
+                      ability:
+                        name: friend-guard
+                        url: https://pokeapi.co/api/v2/ability/132/
+                  forms:
+                    - name: clefairy
+                      url: https://pokeapi.co/api/v2/pokemon-form/35/
+
+components:
+  schemas:
+    #
+    PokemonAbility:
+      type: object
+      properties:
+        is_hidden:
+          description: Whether or not this is a hidden ability.
+          type: boolean
+        slot:
+          description: The slot this ability occupies in this Pokémon species.
+          type: integer
+        ability:
+          description: The ability the Pokémon may have.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - is_hidden
+        - slot
+        - ability
+      example:
+        is_hidden: true
+        slot: 3
+        ability:
+          name: friend-guard
+          url: https://pokeapi.co/api/v2/ability/132/
+    #
+    Ability:
+      type: object
+      properties:
+        id:
+          description: The identifier for this resource.
+          type: integer
+        name:
+          description: The name for this resource.
+          type: string
+        is_main_series:
+          description: Whether or not this ability originated in the main series of the video games.
+          type: boolean
+        generation:
+          description: The generation this ability originated in.
+          $ref: '#/components/schemas/NamedAPIResource'
+        names:
+          description: The name of this resource listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/Name'
+        effect_entries:
+          description: The effect of this ability listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/VerboseEffect'
+        effect_changes:
+          description: The list of previous effects this ability has had across version groups.
+          type: array
+          items:
+            $ref: '#/components/schemas/AbilityEffectChange'
+        flavor_text_entries:
+          description: The flavor text of this ability listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/AbilityFlavorText'
+        pokemon:
+          description: A list of Pokémon that could potentially have this ability.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonAbility'
+      required:
+        - id
+        - name
+        - is_main_series
+        - generation
+        - names
+        - effect_entries
+        - effect_changes
+        - flavor_text_entries
+        - pokemon
+      example:
+        id: 1
+        name: stench
+        is_main_series: true
+        generation:
+          name: generation-iii
+          url: https://pokeapi.co/api/v2/generation/3/
+        names:
+          - name: Stench
+            language:
+              name: en
+              url: https://pokeapi.co/api/v2/language/9/
+        effect_entries:
+          - effect: "This Pokémon's damaging moves have a 10% chance to make the target [flinch]{mechanic:flinch} with each hit if they do not already cause flinching as a secondary effect. This ability does not stack with a held item. Overworld: The wild encounter rate is halved while this Pokémon is first in the party."
+            short_effect: "Has a 10% chance of making target Pokémon [flinch]{mechanic:flinch} with each hit."
+            language:
+              name: en
+              url: https://pokeapi.co/api/v2/language/9/
+        effect_changes:
+          - version_group:
+              name: black-white
+              url: https://pokeapi.co/api/v2/version-group/11/
+        flavor_text_entries:
+          - flavor_text: "è‡­ãã¦ã€€ç›¸æ‰‹ãŒ ã²ã‚‹ã‚€ã€€ã“ã¨ãŒã‚ã‚‹ã€‚"
+            language:
+              name: ja-kanji
+              url: https://pokeapi.co/api/v2/language/11/
+            version_group:
+              name: x-y
+              url: https://pokeapi.co/api/v2/version-group/15/
+        # TODO
+        # pokemon:
+    AbilityFlavorText:
+      type: object
+      properties:
+        flavor_text:
+          description: The localized name for an API resource in a specific language.
+          type: string
+        language:
+          description: The language this text resource is in.
+          $ref: '#/components/schemas/NamedAPIResource'
+        version_group:
+          description: The version group that uses this flavor text.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - flavor_text
+        - language
+        - version_group
+    #
+    Effect:
+      type: object
+      properties:
+        effect:
+          description: The localized effect text for an API resource in a specific language.
+          type: string
+        language:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - effect
+        - language
+    #
+    VerboseEffect:
+      type: object
+      properties:
+        effect:
+          description: The localized effect text for an API resource in a specific language.
+          type: string
+          example: "This Pokémon's damaging moves have a 10% chance to make the target [flinch]{mechanic:flinch} with each hit if they do not already cause flinching as a secondary effect. This ability does not stack with a held item. Overworld: The wild encounter rate is halved while this Pokémon is first in the party."
+        short_effect:
+          description: The localized effect text in brief.
+          type: string
+          example: "Has a 10% chance of making target Pokémon [flinch]{mechanic:flinch} with each hit."
+        language:
+          description: The language this effect is in.
+          $ref: '#/components/schemas/NamedAPIResource'
+          example:
+            name: en
+            url: https://pokeapi.co/api/v2/language/9/
+      required:
+        - effect
+        - short_effect
+        - language
+    #
+    AbilityEffectChange:
+      type: object
+      properties:
+        effect_entries:
+          description: The previous effect of this ability listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/Effect'
+        version_group:
+          description: The version group in which the previous effect of this ability originated.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - effect_entries
+        - version_group
+    #
+    Generation:
+      type: object
+      properties:
+        id:
+          description: The identifier for this resource.
+          type: integer
+        name:
+          description: The name for this resource.
+          type: string          
+        abilities:
+          description: A list of abilities that were introduced in this generation.
+          type: array
+          items:
+            $ref: '#/components/schemas/Ability'
+        names:
+          description: The name of this resource listed in different languages.
+          type: array
+    Name:
+      type: object
+      properties:
+        name:
+          description: The localized name for an API resource in a specific language.
+          type: string
+        language:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - name
+        - language
+    NamedAPIResource:
+      type: object
+      properties:
+        name:
+          description: The language this name is in.
+          type: string
+          # example: en
+        url:
+          description: The URL of the referenced resource.
+          type: string
+          format: uri
+          # example: https://pokeapi.co/api/v2/language/9/
+      required:
+        - name
+        - url
+    Language:
+      type: object
+      properties:
+        id:
+          description: The identifier for this resource.
+          type: integer
+          example: 1
+        name:
+          description: The name for this resource.
+          type: string
+          example: ja
+        official:
+          description: Whether or not the games are published in this language.
+          type: boolean
+          example: true
+        iso639:
+          description: The two-letter code of the country where this language is spoken. Note that it is not unique.
+          type: string
+          example: ja
+        iso3166:
+          description: The two-letter code of the language. Note that it is not unique.
+          type: string
+          example: jp
+        names:
+          description: The name of this resource listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/Name'
+      required:
+        - id
+        - name
+        - official
+        - iso639
+        - iso3166
+        - names
+
+          
