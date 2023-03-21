@@ -9,7 +9,7 @@ paths:
     get:
       tags:
         - pokemon
-      operationId: getPokemon
+      operationId: getPokemons
       parameters:
         - name: limit
           in: query
@@ -31,12 +31,10 @@ paths:
                 properties:
                   count:
                     type: number
-                    example: 1281
                   next:
                     type: string
                     format: uri
                     nullable: true
-                    example: https://pokeapi.co/api/v2/pokemon?offset=20&limit=20
                   previous:
                     type: string
                     format: uri
@@ -54,18 +52,27 @@ paths:
                       required:
                         - name
                         - url
-                    example:
-                      - name: bulbasaur
-                        url: https://pokeapi.co/api/v2/pokemon/1/
-                      - name: ivysaur
-                        url: https://pokeapi.co/api/v2/pokemon/2/
                 required:
                   - count
                   - next
                   - previous
                   - results
+                example:
+                  count: 1281
+                  next: https://pokeapi.co/api/v2/pokemon?offset=20&limit=20
+                  previous: null
+                  results:
+                    - name: bulbasaur
+                      url: https://pokeapi.co/api/v2/pokemon/1/
+                    - name: ivysaur
+                      url: https://pokeapi.co/api/v2/pokemon/2/
   /pokemon/{id}:
     get:
+      description: |
+        Pokémon are the creatures that inhabit the world of the Pokémon games.
+        They can be caught using Pokéballs and trained by battling with other Pokémon.
+        Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings.
+        See Bulbapedia for greater detail.
       tags:
         - pokemon
       operationId: getPokemonById
@@ -114,8 +121,66 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/NamedAPIResource'
+                  game_indices:
+                    description: A list of game indices relevent to Pokémon item by generation.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VersionGameIndex'
+                  held_items:
+                    description: A list of items this Pokémon may be holding when encountered.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PokemonHeldItem'
+                  location_area_encounters:
+                    description: A link to a list of location areas, as well as encounter details pertaining to specific versions.
+                    type: string
+                  moves:
+                    description: A list of moves along with learn methods and level details pertaining to specific version groups.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PokemonMove'
+                  past_types:
+                    description: A list of details showing types this pokémon had in previous generations
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PokemonTypePast'
+                  sprites:
+                    description: A set of sprites used to depict this Pokémon in the game. A visual representation of the various sprites can be found at PokeAPI/sprites                    
+                    $ref: '#/components/schemas/PokemonSprites'
+                  species:
+                    description: The species this Pokémon belongs to.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NamedAPIResource'
+                  stats:
+                    description: A list of base stat values for this Pokémon.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PokemonStat'
+                  types:
+                    description: A list of details showing types this Pokémon has.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PokemonType'
                 required:
                   - id
+                  - name
+                  - base_experience
+                  - height
+                  - is_default
+                  - order
+                  - weight
+                  - abilities
+                  - forms
+                  - game_indices
+                  - held_items
+                  - location_area_encounters
+                  - moves
+                  - past_types
+                  - sprites
+                  - species
+                  - stats
+                  - types
                 example:
                   id: 35
                   name: clefairy
@@ -133,7 +198,263 @@ paths:
                   forms:
                     - name: clefairy
                       url: https://pokeapi.co/api/v2/pokemon-form/35/
-
+                  game_indices:
+                    - game_index: 35
+                      version:
+                        name: white-2
+                        url: https://pokeapi.co/api/v2/version/22/
+                  held_items:
+                    - item:
+                        name: moon-stone
+                        url: https://pokeapi.co/api/v2/item/81/
+                      version_details:
+                        - rarity: 5
+                          version:
+                            name: ruby
+                            url: https://pokeapi.co/api/v2/version/7/
+                  location_area_encounters: /api/v2/pokemon/35/encounters
+                  moves:
+                    - move:
+                        name: pound
+                        url: https://pokeapi.co/api/v2/move/1/
+                  species:
+                    name: clefairy
+                    url: https://pokeapi.co/api/v2/pokemon-species/35/
+                  sprites:
+                    back_default: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/35.png
+                    back_female: null
+                    back_shiny: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/35.png
+                    back_shiny_female: null
+                    front_default: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/35.png
+                    front_female: null
+                    front_shiny: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/35.png
+                    front_shiny_female: null
+                  stats:
+                    - base_stat: 35
+                      effort: 0
+                      stat:
+                        name: speed
+                        url: https://pokeapi.co/api/v2/stat/6/
+                  types:
+                    - slot: 1
+                      type:
+                        name: fairy
+                        url: https://pokeapi.co/api/v2/type/18/
+                  past_types:
+                    - generation:
+                        name: generation-v
+                        url: https://pokeapi.co/api/v2/generation/5/
+                      types:
+                        - slot: 1
+                          type:
+                            name: normal
+                            url: https://pokeapi.co/api/v2/type/1/
+  /types:
+    description: |
+      Types are properties for Pokémon and their moves.
+      Each type has three properties: which types of Pokémon it is super effective against, which types of Pokémon it is not very effective against, and which types of Pokémon it is completely ineffective against.
+    get:
+      tags:
+        - type
+      operationId: getTypes
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        url: 
+                          type: string
+                          format: uri
+                      required:
+                        - name
+                        - url
+                required:
+                  - count
+                  - next
+                  - previous
+                  - results
+                example:
+                  count: 20
+                  next: null
+                  previous: null
+                  results:
+                    - name: normal
+                      url: https://pokeapi.co/api/v2/type/1/
+                    - name: fighting
+                      url: https://pokeapi.co/api/v2/type/2/
+  /types/{id}:
+    description: |
+      Types are properties for Pokémon and their moves.
+      Each type has three properties: which types of Pokémon it is super effective against, which types of Pokémon it is not very effective against, and which types of Pokémon it is completely ineffective against.
+    get:
+      tags:
+        - type
+      operationId: getTypeById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: The identifier for this resource.
+                    type: integer
+                  name:
+                    description: The name for this resource.
+                    type: string
+                  damage_relations:
+                    description: A detail of how effective this type is toward others and vice versa.
+                    $ref: '#/components/schemas/TypeRelations'
+                  past_damage_relations:
+                    description: A list of details of how effective this type was toward others and vice versa in previous generations
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TypeRelationsPast'
+                  game_indices:
+                    description: A list of game indices relevent to this item by generation.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GenerationGameIndex'
+                  generation:
+                    description: The generation this type was introduced in.
+                    $ref: '#/components/schemas/NamedAPIResource'
+                  move_damage_class:
+                    description: The class of damage inflicted by this type.
+                    $ref: '#/components/schemas/NamedAPIResource'
+                  names:
+                    description: The name of this resource listed in different languages.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Name'
+                  pokemon:
+                    description: A list of details of Pokémon that have this type.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TypePokemon'
+                  moves:
+                    description: A list of moves that have this type.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NamedAPIResource'
+                required:
+                  - id
+                  - name
+                  - damage_relations
+                  - past_damage_relations
+                  - game_indices
+                  - generation
+                  - move_damage_class
+                  - names
+                  - pokemon
+                  - moves
+                example:
+                  id: 5
+                  name: ground
+                  damage_relations:
+                    no_damage_to:
+                      - name: flying
+                        url: https://pokeapi.co/api/v2/type/3/
+                    half_damage_to:
+                      - name: bug
+                        url: https://pokeapi.co/api/v2/type/7/
+                    double_damage_to:
+                      - name: poison
+                        url: https://pokeapi.co/api/v2/type/4/
+                    no_damage_from:
+                      - name: electric
+                        url: https://pokeapi.co/api/v2/type/13/
+                    half_damage_from:
+                      - name: poison
+                        url: https://pokeapi.co/api/v2/type/4/
+                    double_damage_from:
+                      - name: water
+                        url: https://pokeapi.co/api/v2/type/11/
+                  past_damage_relations:
+                    - generation:
+                        name: generation-v
+                        url: https://pokeapi.co/api/v2/generation/5/
+                      damage_relations:
+                        no_damage_to:
+                          - name: normal
+                            url: https://pokeapi.co/api/v2/type/1/
+                        half_damage_to:
+                          - name: steel
+                            url: https://pokeapi.co/api/v2/type/9/
+                        double_damage_to:
+                          - name: ghost
+                            url: https://pokeapi.co/api/v2/type/8/
+                        no_damage_from:
+                          - name: normal
+                            url: https://pokeapi.co/api/v2/type/1/
+                        half_damage_from:
+                          - name: poison
+                            url: https://pokeapi.co/api/v2/type/4/
+                        double_damage_from:
+                          - name: ghost
+                            url: https://pokeapi.co/api/v2/type/8/
+                  game_indices:
+                    - game_index: 4
+                      generation:
+                        name: generation-i
+                        url: https://pokeapi.co/api/v2/generation/1/
+                  generation:
+                    name: generation-i
+                    url: https://pokeapi.co/api/v2/generation/1/
+                  move_damage_class:
+                    name: physical
+                    url: https://pokeapi.co/api/v2/move-damage-class/2/
+                  names:
+                    - name: "ã˜ã‚ã‚“"
+                      language:
+                        name: ja
+                        url: https://pokeapi.co/api/v2/language/1/
+                  pokemon:
+                    - slot: 1
+                      pokemon:
+                        name: sandshrew
+                        url: https://pokeapi.co/api/v2/pokemon/27/
+                  moves:
+                    - name: sand-attack
+                      url: https://pokeapi.co/api/v2/move/28/
 components:
   schemas:
     #
@@ -159,6 +480,177 @@ components:
         ability:
           name: friend-guard
           url: https://pokeapi.co/api/v2/ability/132/
+    #
+    PokemonType:
+      type: object
+      properties:
+        slot:
+          description: The order the Pokémon's types are listed in.
+          type: integer
+        type:
+          description: The type the referenced Pokémon has.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - slot
+        - type
+    #
+    PokemonFormType:
+      type: object
+      properties:
+        slot:
+          description: The order the Pokémon's types are listed in.
+          type: integer
+        type:
+          description: The type the referenced Form has.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - slot
+        - type
+    #
+    PokemonTypePast:
+      type: object
+      properties:
+        generation:
+          description: The last generation in which the referenced pokémon had the listed types.
+          $ref: '#/components/schemas/NamedAPIResource'
+        types:
+          description: The types the referenced pokémon had up to and including the listed generation.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonType'
+      required:
+        - generation
+        - types
+    #
+    PokemonHeldItem:
+      type: object
+      properties:
+        item:
+          description: The item the referenced Pokémon holds.
+          $ref: '#/components/schemas/NamedAPIResource'
+        version_details:
+          description: The details of the different versions in which the item is held.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonHeldItemVersion'
+      required:
+        - item
+        - version_details
+    #
+    PokemonHeldItemVersion:
+      type: object
+      properties:
+        version:
+          description: The version in which the item is held.
+          $ref: '#/components/schemas/NamedAPIResource'
+        rarity:
+          description: How often the item is held.
+          type: integer
+      required:
+        - version
+        - rarity
+    #
+    PokemonMove:
+      type: object
+      properties:
+        move:
+          description: The move the Pokémon can learn.
+          $ref: '#/components/schemas/NamedAPIResource'
+        version_group_details:
+          description: The details of the version in which the Pokémon can learn the move.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonMoveVersion'
+      required:
+        - move
+        - version_group_details
+    #
+    PokemonMoveVersion:
+      type: object
+      properties:
+        move_learn_method:
+          description: The method by which the move is learned.
+          $ref: '#/components/schemas/NamedAPIResource'
+        version_group:
+          description: The version group in which the move is learned.
+          $ref: '#/components/schemas/NamedAPIResource'
+        level_learned_at:
+          description: The minimum level to learn the move.
+          type: integer
+      required:
+        - move_learn_method
+        - version_group
+        - level_learned_at
+    #
+    PokemonStat:
+      type: object
+      properties:
+        stat:
+          description: The stat the Pokémon has.
+          $ref: '#/components/schemas/NamedAPIResource'
+        effort:
+          description: The effort points (EV) the Pokémon has in the stat.
+          type: integer
+        base_stat:
+          description: The base value of the stat.
+          type: integer
+      required:
+        - stat
+        - effort
+        - base_stat
+    #
+    PokemonSprites:
+      type: object
+      properties:
+        front_default:
+          description: The default depiction of this Pokémon from the front in battle.
+          type: string
+          format: uri
+          nullable: false
+        front_shiny:
+          description: The shiny depiction of this Pokémon from the front in battle.
+          type: string
+          format: uri
+          nullable: true
+        front_female:
+          description: The female depiction of this Pokémon from the front in battle.
+          type: string
+          format: uri
+          nullable: false
+        front_shiny_female:
+          description: The shiny female depiction of this Pokémon from the front in battle.
+          type: string
+          format: uri
+          nullable: true
+        back_default:
+          description: The default depiction of this Pokémon from the back in battle.
+          type: string
+          format: uri
+          nullable: false
+        back_shiny:
+          description: The shiny depiction of this Pokémon from the back in battle.
+          type: string
+          format: uri
+          nullable: true
+        back_female:
+          description: The female depiction of this Pokémon from the back in battle.
+          type: string
+          format: uri
+          nullable: false
+        back_shiny_female:
+          description: The shiny female depiction of this Pokémon from the back in battle.
+          type: string
+          format: uri
+          nullable: true
+      required:
+        - front_default
+        - front_shiny
+        - front_female
+        - front_shiny_female
+        - back_default
+        - back_shiny
+        - back_female
+        - back_shiny_female
     #
     Ability:
       type: object
@@ -308,6 +800,61 @@ components:
         - effect_entries
         - version_group
     #
+    TypePokemon:
+      type: object
+      properties:
+        slot:
+          description: The order the Pokémon's types are listed in.
+          type: integer
+        pokemon:
+          description: The Pokémon that has the referenced type.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - slot
+        - pokemon
+    #
+    TypeRelations:
+      type: object
+      properties:        
+        no_damage_to:
+          description: A list of types this type has no effect on.
+          $ref: '#/components/schemas/NamedAPIResource'
+        half_damage_to:
+          description: A list of types this type is not very effect against
+          $ref: '#/components/schemas/NamedAPIResource'
+        double_damage_to:
+          description: A list of types this type is very effect against.
+          $ref: '#/components/schemas/NamedAPIResource'
+        no_damage_from:
+          description: A list of types that have no effect on this type.
+          $ref: '#/components/schemas/NamedAPIResource'
+        half_damage_from:
+          description: A list of types that are not very effective against this type.
+          $ref: '#/components/schemas/NamedAPIResource'
+        double_damage_from:
+          description: A list of types that are very effective against this type.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - no_damage_to
+        - half_damage_to
+        - double_damage_to
+        - no_damage_from
+        - half_damage_from
+        - double_damage_from
+    #
+    TypeRelationsPast:
+      type: object
+      properties:
+        generation:
+          description: The last generation in which the referenced type had the listed damage relations
+          $ref: '#/components/schemas/NamedAPIResource'
+        damage_relations:
+          description: The damage relations the referenced type had up to and including the listed generation
+          $ref: '#/components/schemas/TypeRelations'
+      required:
+        - generation
+        - damage_relations
+    #
     Generation:
       type: object
       properties:
@@ -325,6 +872,7 @@ components:
         names:
           description: The name of this resource listed in different languages.
           type: array
+    #
     Name:
       type: object
       properties:
@@ -336,6 +884,7 @@ components:
       required:
         - name
         - language
+    #
     NamedAPIResource:
       type: object
       properties:
@@ -351,6 +900,7 @@ components:
       required:
         - name
         - url
+    #
     Language:
       type: object
       properties:
@@ -386,5 +936,30 @@ components:
         - iso639
         - iso3166
         - names
-
+    #
+    GenerationGameIndex:
+      type: object
+      properties:        
+        game_index:
+          description: The internal id of an API resource within game data.
+          type: integer
+        generation:
+          description: The generation relevent to this game index.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - game_index
+        - generation
+    #
+    VersionGameIndex:
+      type: object
+      properties:
+        game_index:
+          description: The internal id of an API resource within game data.
+          type: integer
+        version:
+          description: The version relevent to this game index.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - game_index
+        - version
           
