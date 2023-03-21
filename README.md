@@ -9,3 +9,10 @@ https://pokeapi.co/
 >
 > All the Pokémon data you'll ever need in one place,
 > easily accessible through a modern RESTful API.
+
+## For Development
+
+![example workflow](https://github.com/sonohara/openapi-pokeapi/actions/workflows/main.yml/badge.svg)
+
+- https://redocly.com/docs/cli/commands/lint/
+- https://redocly.com/docs/cli/configuration/
