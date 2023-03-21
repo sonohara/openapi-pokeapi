@@ -1,0 +1,15 @@
+# See https://redocly.com/docs/cli/configuration/
+
+apis:
+  # Update the apiName with your actual API name, and the version with your actual API version.
+  PokeApi@2.0:
+    # Update the path to your OpenAPI root file
+    root: ./pokeapi.yaml
+
+extends:
+  - recommended
+  
+rules:
+  # A sample custom rule. Read more about rules: https://redocly.com/docs/cli/rules/
+  operation-summary: off
+  security-defined: warn

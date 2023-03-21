@@ -1,0 +1,21 @@
+{
+  "name": "openapi-pokeapi",
+  "version": "0.0.1",
+  "description": "OpenAPI specification for PokeAPI",
+  "scripts": {
+    "test": "npx @redocly/cli lint pokeapi.yml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonohara/openapi-pokeapi.git"
+  },
+  "author": "sonohara",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sonohara/openapi-pokeapi/issues"
+  },
+  "homepage": "https://github.com/sonohara/openapi-pokeapi#readme",
+  "devDependencies": {
+    "@redocly/cli": "^1.0.0-beta.124"
+  }
+}
