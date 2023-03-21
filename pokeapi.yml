@@ -8,7 +8,7 @@ paths:
   /pokemon:
     get:
       tags:
-        - pokemon
+        - Pokemon
       operationId: getPokemons
       parameters:
         - name: limit
@@ -74,7 +74,7 @@ paths:
         Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings.
         See Bulbapedia for greater detail.
       tags:
-        - pokemon
+        - Pokemon
       operationId: getPokemonById
       parameters:
         - name: id
@@ -255,7 +255,7 @@ paths:
       Each type has three properties: which types of Pokémon it is super effective against, which types of Pokémon it is not very effective against, and which types of Pokémon it is completely ineffective against.
     get:
       tags:
-        - type
+        - Pokemon
       operationId: getTypes
       parameters:
         - name: limit
@@ -319,7 +319,7 @@ paths:
       Each type has three properties: which types of Pokémon it is super effective against, which types of Pokémon it is not very effective against, and which types of Pokémon it is completely ineffective against.
     get:
       tags:
-        - type
+        - Pokemon
       operationId: getTypeById
       parameters:
         - name: id
@@ -455,6 +455,216 @@ paths:
                   moves:
                     - name: sand-attack
                       url: https://pokeapi.co/api/v2/move/28/
+  /item:
+    description: |
+      An item is an object in the games which the player can pick up, keep in their bag, and use in some manner.
+      They have various uses, including healing, powering up, helping catch Pokémon, or to access a new area.
+    get:
+      tags:
+        - Items 
+      operationId: getItems
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        url: 
+                          type: string
+                          format: uri
+                      required:
+                        - name
+                        - url
+                required:
+                  - count
+                  - next
+                  - previous
+                  - results
+                example:
+                  count: 2050
+                  next: https://pokeapi.co/api/v2/item?offset=20&limit=20
+                  previous: null
+                  results:
+                    - name: master-ball
+                      url: https://pokeapi.co/api/v2/item/1/
+                    - name: ultra-bal
+                      url: https://pokeapi.co/api/v2/item/2/
+  /item/{id}:
+    description: |
+      An item is an object in the games which the player can pick up, keep in their bag, and use in some manner.
+      They have various uses, including healing, powering up, helping catch Pokémon, or to access a new area.
+    get:
+      tags:
+        - Items 
+      operationId: getItemById
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: The identifier for this resource.
+                    type: integer
+                  name:
+                    description: The name for this resource.
+                    type: string
+                  cost:
+                    description: The price of this item in stores.
+                    type: integer
+                  fling_power:
+                    description: The power of the move Fling when used with this item.
+                    type: integer
+                  fling_effect:
+                    description: The effect of the move Fling when used with this item.
+                    $ref: '#/components/schemas/NamedAPIResource'
+                  attributes:
+                    description: A list of attributes this item has.
+                    $ref: '#/components/schemas/NamedAPIResource'
+                  category:
+                    description: The category of items this item falls into.
+                    $ref: '#/components/schemas/NamedAPIResource'
+                  effect_entries:
+                    description: The effect of this ability listed in different languages.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VerboseEffect'
+                  flavor_text_entries:
+                    description: The flavor text of this ability listed in different languages.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VersionGroupFlavorText'
+                  game_indices:
+                    description: A list of game indices relevent to this item by generation.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GenerationGameIndex'
+                  names:
+                    description: The name of this item listed in different languages.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Name'
+                  sprites:
+                    description: A set of sprites used to depict this item in the game.
+                    $ref: '#/components/schemas/ItemSprites'
+                  held_by_pokemon:
+                    description: A list of Pokémon that might be found in the wild holding this item.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemHolderPokemon'
+                  baby_trigger_for:
+                    description: An evolution chain this item requires to produce a bay during mating.
+                    $ref: '#/components/schemas/NamedAPIResource'
+                  machines:
+                    description: A list of the machines related to this item.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MachineVersionDetail'
+                required:
+                  - id
+                  - name
+                  - cost
+                  - fling_power
+                  - fling_effect
+                  - attributes
+                  - category
+                  - effect_entries
+                  - flavor_text_entries
+                  - game_indices
+                  - names
+                  - sprites
+                  - held_by_pokemon
+                  - baby_trigger_for
+                  - machines
+                example:
+                  id: 1
+                  name: master-ball
+                  cost: 0
+                  fling_power: 10
+                  fling_effect:
+                    name: flinch
+                    url: https://pokeapi.co/api/v2/item-fling-effect/7/
+                  attributes:
+                    - name: holdable
+                      url: https://pokeapi.co/api/v2/item-attribute/5/
+                  category:
+                    name: standard-balls
+                    url: https://pokeapi.co/api/v2/item-category/34/
+                  effect_entries:
+                    - effect: |
+                        Used in battle\n:   [Catches]{mechanic:catch} a wild Pokémon without fail.\n\n    If used in a trainer battle, nothing happens and the ball is lost.
+                      short_effect: Catches a wild Pokémon every time.
+                      language:
+                        name: en
+                        url: https://pokeapi.co/api/v2/language/9/
+                  flavor_text_entries:
+                    - text: The best Poké Ball with the ultimate level of performance. With it, you will catch any wild Pokémon without fail.
+                      version_group:
+                        name: x-y
+                        url: https://pokeapi.co/api/v2/version-group/15/
+                      language:
+                        name: en
+                        url: https://pokeapi.co/api/v2/language/9/
+                  game_indices:
+                    - game_index: 1
+                      generation:
+                        name: generation-vi
+                        url: https://pokeapi.co/api/v2/generation/6/
+                  names:
+                    - name: Master Ball
+                      language:
+                        name: en
+                        url: https://pokeapi.co/api/v2/language/9/
+                  sprites:
+                    default: https://pokeapi.co/media/sprites/items/master-ball.png
+                  held_by_pokemon:
+                    - pokemon:
+                        name: chansey
+                        url: https://pokeapi.co/api/v2/pokemon/113/
+                      version_details:
+                        - rarity: 50
+                          version:
+                            name: soulsilver
+                            url: https://pokeapi.co/api/v2/version/16/
+                  baby_trigger_for:
+                    url: https://pokeapi.co/api/v2/evolution-chain/1/
+
 components:
   schemas:
     #
@@ -732,8 +942,22 @@ components:
             version_group:
               name: x-y
               url: https://pokeapi.co/api/v2/version-group/15/
-        # TODO
-        # pokemon:
+    #
+    AbilityEffectChange:
+      type: object
+      properties:
+        effect_entries:
+          description: The previous effect of this ability listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/Effect'
+        version_group:
+          description: The version group in which the previous effect of this ability originated.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - effect_entries
+        - version_group
+    #
     AbilityFlavorText:
       type: object
       properties:
@@ -784,21 +1008,6 @@ components:
         - effect
         - short_effect
         - language
-    #
-    AbilityEffectChange:
-      type: object
-      properties:
-        effect_entries:
-          description: The previous effect of this ability listed in different languages.
-          type: array
-          items:
-            $ref: '#/components/schemas/Effect'
-        version_group:
-          description: The version group in which the previous effect of this ability originated.
-          $ref: '#/components/schemas/NamedAPIResource'
-      required:
-        - effect_entries
-        - version_group
     #
     TypePokemon:
       type: object
@@ -854,6 +1063,43 @@ components:
       required:
         - generation
         - damage_relations
+    #
+    ItemSprites:
+      type: object
+      properties:
+        default:
+          description: The default depiction of this item.
+          type: string
+      required:
+        - default
+    #
+    ItemHolderPokemon:
+      type: object
+      properties:
+        pokemon:
+          description: The Pokémon that holds this item.
+          $ref: '#/components/schemas/NamedAPIResource'
+        version_details:
+          description: The details for the version that this item is held in by the Pokémon.
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemHolderPokemonVersionDetail'
+      required:
+        - pokemon
+        - version_details
+    #
+    ItemHolderPokemonVersionDetail:
+      type: object
+      properties:
+        rarity:
+          description: How often this Pokémon holds this item in this version.
+          type: integer
+        version:
+          description: The version that this item is held in by the Pokémon.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - rarity
+        - version
     #
     Generation:
       type: object
@@ -937,6 +1183,19 @@ components:
         - iso3166
         - names
     #
+    MachineVersionDetail:
+      type: object
+      properties:
+        machine:
+          description: The machine that teaches a move from an item.
+          $ref: '#/components/schemas/NamedAPIResource'
+        version_group:
+          description: The version group of this specific machine.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - machine
+        - version_group
+    #
     GenerationGameIndex:
       type: object
       properties:        
@@ -962,4 +1221,21 @@ components:
       required:
         - game_index
         - version
+    #
+    VersionGroupFlavorText:
+      type: object
+      properties:
+        text:
+          description: The localized name for an API resource in a specific language.
+          type: string
+        language:
+          description: The language this name is in.
+          $ref: '#/components/schemas/NamedAPIResource'
+        version_group:
+          description: The version group which uses this flavor text.
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - text
+        - language
+        - version_group
           
