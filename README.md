@@ -14,5 +14,12 @@ https://pokeapi.co/
 
 ![example workflow](https://github.com/sonohara/openapi-pokeapi/actions/workflows/main.yml/badge.svg)
 
+### Reference
+
+Validate spec and build docs
 - https://redocly.com/docs/cli/commands/lint/
 - https://redocly.com/docs/cli/configuration/
+
+Deploy to GitHub Pages
+- https://zenn.dev/zozotech/articles/f2509a21b768ed
+- https://developer.mamezou-tech.com/blogs/2022/09/08/github-pages-new-deploy-method/

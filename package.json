@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "OpenAPI specification for PokeAPI",
   "scripts": {
-    "test": "npx @redocly/cli lint pokeapi.yml"
+    "test": "redocly lint pokeapi.yml",
+    "docs": "redocly build-docs pokeapi.yml --output docs/index.html"
   },
   "repository": {
     "type": "git",
