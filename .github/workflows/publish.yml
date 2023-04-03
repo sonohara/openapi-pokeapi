@@ -24,7 +24,7 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
-      - run: sed -i 's/${hello}/${{ github.event.release.tag_name }}/g' common.yml
+      - run: sed -i 's/${tag_name}/${{ github.event.release.tag_name }}/g' common.yml
         working-directory: generator
       - run: npm run gen
       - run: npm publish
