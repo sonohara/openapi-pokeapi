@@ -24,16 +24,14 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
+      - run: sed -i 's/${hello}/${{ github.event.release.tag_name }}/g' common.yml
+        working-directory: generator
       - run: npm run gen
-      - run: |
-          cd packages/typescript-angular
-          npm version ${{ github.event.release.tag_name  }}
-          npm publish
+      - run: npm publish
+        working-directory: packages/typescript-angular
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          cd packages/typescript-fetch
-          npm version ${{ github.event.release.tag_name  }}
-          npm publish
+      - run: npm publish
+        working-directory: packages/typescript-fetch
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

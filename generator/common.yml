@@ -1,3 +1,4 @@
 inputSpec: pokeapi.yml
 gitUserId: sonohara
 gitRepoId: openapi-pokeapi
+npmVersion: "${tag_name}"

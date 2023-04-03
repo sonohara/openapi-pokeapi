@@ -1,7 +1,6 @@
 # https://openapi-generator.tech/docs/generators/typescript-fetch
-'!include': 'common.yaml'
+"!include": "common.yml"
 generatorName: typescript-fetch
 outputDir: packages/typescript-fetch
-npmName: '@sonohara/pokeapi-typescript-fetch'
-npmVersion: "0.0.1"
+npmName: "@sonohara/pokeapi-typescript-fetch"
 supportsES6: true
