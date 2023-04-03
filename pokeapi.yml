@@ -2,6 +2,8 @@ openapi: '3.0.2'
 info:
   title: PokeAPI
   version: '2.0'
+  license:
+    name: MIT
 servers:
   - url: https://pokeapi.co/api/v2
 paths:
@@ -443,7 +445,7 @@ paths:
                     name: physical
                     url: https://pokeapi.co/api/v2/move-damage-class/2/
                   names:
-                    - name: "ã˜ã‚ã‚“"
+                    - name: "あ"
                       language:
                         name: ja
                         url: https://pokeapi.co/api/v2/language/1/
@@ -937,7 +939,7 @@ components:
               name: black-white
               url: https://pokeapi.co/api/v2/version-group/11/
         flavor_text_entries:
-          - flavor_text: "è‡­ãã¦ã€€ç›¸æ‰‹ãŒ ã²ã‚‹ã‚€ã€€ã“ã¨ãŒã‚ã‚‹ã€‚"
+          - flavor_text: "あ"
             language:
               name: ja-kanji
               url: https://pokeapi.co/api/v2/language/11/
@@ -1103,23 +1105,23 @@ components:
         - rarity
         - version
     #
-    Generation:
-      type: object
-      properties:
-        id:
-          description: The identifier for this resource.
-          type: integer
-        name:
-          description: The name for this resource.
-          type: string          
-        abilities:
-          description: A list of abilities that were introduced in this generation.
-          type: array
-          items:
-            $ref: '#/components/schemas/Ability'
-        names:
-          description: The name of this resource listed in different languages.
-          type: array
+    # Generation:
+    #   type: object
+    #   properties:
+    #     id:
+    #       description: The identifier for this resource.
+    #       type: integer
+    #     name:
+    #       description: The name for this resource.
+    #       type: string          
+    #     abilities:
+    #       description: A list of abilities that were introduced in this generation.
+    #       type: array
+    #       items:
+    #         $ref: '#/components/schemas/Ability'
+    #     names:
+    #       description: The name of this resource listed in different languages.
+    #       type: array
     #
     Name:
       type: object

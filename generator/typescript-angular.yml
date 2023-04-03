@@ -1,0 +1,7 @@
+# https://openapi-generator.tech/docs/generators/typescript-angular
+'!include': 'common.yaml'
+generatorName: typescript-angular
+outputDir: packages/typescript-angular
+npmName: '@sonohara/pokeapi-typescript-angular'
+npmVersion: "0.0.1"
+supportsES6: true

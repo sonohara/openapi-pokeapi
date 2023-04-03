@@ -4,7 +4,8 @@
   "description": "OpenAPI specification for PokeAPI",
   "scripts": {
     "test": "redocly lint pokeapi.yml",
-    "docs": "redocly build-docs pokeapi.yml --output docs/index.html"
+    "docs": "redocly build-docs pokeapi.yml --output docs/index.html",
+    "gen": "openapi-generator-cli batch generator/*.yml"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/sonohara/openapi-pokeapi#readme",
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.2",
     "@redocly/cli": "^1.0.0-beta.124"
   }
 }
