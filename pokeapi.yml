@@ -223,8 +223,6 @@ paths:
           $ref: '#/components/responses/404Response'
       operationId: getVersionGroupById
       description: Version groups categorize highly similar versions of the games.
-      requestBody:
-        content: {}
       tags:
         - Games
     parameters:
@@ -277,7 +275,7 @@ paths:
           in: query
           name: offset
       description: 'A Pokémon Species forms the basis for at least one Pokémon. Attributes of a Pokémon species are shared across all varieties of Pokémon within the species. A good example is Wormadam; Wormadam is the species which can be found in three different varieties, Wormadam-Trash, Wormadam-Sandy and Wormadam-Plant.'
-  '/pokemon-species/{id or name}':
+  '/pokemon-species/{id-or-name}':
     get:
       summary: ''
       tags:
@@ -289,6 +287,12 @@ paths:
           $ref: '#/components/responses/404Response'
       operationId: getPokemonSpeciesById
       description: 'A Pokémon Species forms the basis for at least one Pokémon. Attributes of a Pokémon species are shared across all varieties of Pokémon within the species. A good example is Wormadam; Wormadam is the species which can be found in three different varieties, Wormadam-Trash, Wormadam-Sandy and Wormadam-Plant.'
+    parameters:
+      - schema:
+          type: string
+        name: id-or-name
+        in: path
+        required: true
 components:
   schemas:
     PokemonAbility:
