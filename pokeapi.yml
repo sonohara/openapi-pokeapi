@@ -293,6 +293,46 @@ paths:
         name: id-or-name
         in: path
         required: true
+  /evolution-chain:
+    get:
+      summary: ''
+      tags:
+        - Evolution
+      responses:
+        '200':
+          $ref: '#/components/responses/GetEvolutionChainsResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getEvolutionChain
+      description: Evolution chains are essentially family trees. They start with the lowest stage within a family and detail evolution conditions for each as well as Pokémon they can evolve into up through the hierarchy.
+      parameters:
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: limit
+        - schema:
+            type: integer
+            default: 20
+          in: query
+          name: offset
+  '/evolution-chain/{id}':
+    parameters:
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/GetEvolutionChainsByIdResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getEvolutionChainById
+      description: Evolution chains are essentially family trees. They start with the lowest stage within a family and detail evolution conditions for each as well as Pokémon they can evolve into up through the hierarchy.
 components:
   schemas:
     PokemonAbility:
@@ -729,7 +769,6 @@ components:
           type: string
           format: uri
       required:
-        - name
         - url
     Language:
       type: object
@@ -905,6 +944,104 @@ components:
       required:
         - genus
         - language
+    ChainLink:
+      title: ChainLink
+      type: object
+      properties:
+        is_baby:
+          type: boolean
+          description: Whether or not this link is for a baby Pokémon. This would only ever be true on the base link.
+        species:
+          $ref: '#/components/schemas/NamedAPIResource'
+        evolution_details:
+          description: All details regarding the specific details of the referenced Pokémon species evolution.
+          type: array
+          items:
+            $ref: '#/components/schemas/EvolutionDetail'
+        evolves_to:
+          type: array
+          description: A List of chain objects.
+          items:
+            $ref: '#/components/schemas/ChainLink'
+      required:
+        - is_baby
+        - species
+        - evolution_details
+        - evolves_to
+    EvolutionDetail:
+      title: EvolutionDetail
+      type: object
+      properties:
+        item:
+          type: string
+          description: The item required to cause evolution this into Pokémon species.
+        trigger:
+          type: string
+          description: The type of event that triggers evolution into this Pokémon species.
+        gender:
+          type: integer
+          description: The id of the gender of the evolving Pokémon species must be in order to evolve into this Pokémon species.
+        held_item:
+          type: string
+          description: The item the evolving Pokémon species must be holding during the evolution trigger event to evolve into this Pokémon species.
+        known_move:
+          type: string
+          description: The move that must be known by the evolving Pokémon species during the evolution trigger event in order to evolve into this Pokémon species.
+        known_move_type:
+          type: string
+          description: The evolving Pokémon species must know a move with this type during the evolution trigger event in order to evolve into this Pokémon species.
+        location:
+          type: string
+          description: The location the evolution must be triggered at.
+        min_level:
+          type: integer
+          description: The minimum required level of the evolving Pokémon species to evolve into this Pokémon species.
+        min_happiness:
+          type: integer
+          description: The minimum required level of happiness the evolving Pokémon species to evolve into this Pokémon species.
+        min_beauty:
+          type: integer
+          description: The minimum required level of beauty the evolving Pokémon species to evolve into this Pokémon species.
+        min_affection:
+          type: integer
+          description: The minimum required level of affection the evolving Pokémon species to evolve into this Pokémon species.
+        needs_overworld_rain:
+          type: boolean
+          description: Whether or not it must be raining in the overworld to cause evolution this Pokémon species.
+        party_species:
+          $ref: '#/components/schemas/NamedAPIResource'
+        party_type:
+          $ref: '#/components/schemas/NamedAPIResource'
+        relative_physical_stats:
+          type: integer
+          description: The required relation between the Pokémon's Attack and Defense stats. 1 means Attack > Defense. 0 means Attack = Defense. -1 means Attack < Defense.
+        time_of_day:
+          type: string
+          description: The required time of day. Day or night.
+        trade_species:
+          $ref: '#/components/schemas/NamedAPIResource'
+        turn_upside_down:
+          type: boolean
+          description: Whether or not the 3DS needs to be turned upside-down as this Pokémon levels up.
+      required:
+        - item
+        - trigger
+        - gender
+        - held_item
+        - known_move
+        - known_move_type
+        - location
+        - min_level
+        - min_happiness
+        - min_beauty
+        - min_affection
+        - needs_overworld_rain
+        - party_species
+        - party_type
+        - relative_physical_stats
+        - time_of_day
+        - trade_species
+        - turn_upside_down
   responses:
     GetPokemonsResponse:
       description: OK
@@ -2115,3 +2252,138 @@ components:
           examples:
             Example1:
               value: NotFound
+    GetEvolutionChainsResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                nullable: true
+              previous:
+                type: string
+                format: uri
+                nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+            required:
+              - count
+              - next
+              - previous
+              - results
+          examples:
+            Example1:
+              value:
+                count: 469
+                next: 'https://pokeapi.co/api/v2/evolution-chain?offset=20&limit=20'
+                previous: null
+                results:
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/1/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/2/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/3/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/4/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/5/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/6/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/7/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/8/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/9/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/10/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/11/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/12/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/13/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/14/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/15/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/16/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/17/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/18/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/19/'
+                  - url: 'https://pokeapi.co/api/v2/evolution-chain/20/'
+    GetEvolutionChainsByIdResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: The identifier for this resource.
+              baby_trigger_item:
+                $ref: '#/components/schemas/NamedAPIResource'
+              chain:
+                $ref: '#/components/schemas/ChainLink'
+            required:
+              - id
+              - baby_trigger_item
+              - chain
+          examples:
+            Example1:
+              value:
+                baby_trigger_item: null
+                chain:
+                  evolution_details: []
+                  evolves_to:
+                    - evolution_details:
+                        - gender: null
+                          held_item: null
+                          item: null
+                          known_move: null
+                          known_move_type: null
+                          location: null
+                          min_affection: null
+                          min_beauty: null
+                          min_happiness: null
+                          min_level: 16
+                          needs_overworld_rain: false
+                          party_species: null
+                          party_type: null
+                          relative_physical_stats: null
+                          time_of_day: ''
+                          trade_species: null
+                          trigger:
+                            name: level-up
+                            url: 'https://pokeapi.co/api/v2/evolution-trigger/1/'
+                          turn_upside_down: false
+                      evolves_to:
+                        - evolution_details:
+                            - gender: null
+                              held_item: null
+                              item: null
+                              known_move: null
+                              known_move_type: null
+                              location: null
+                              min_affection: null
+                              min_beauty: null
+                              min_happiness: null
+                              min_level: 32
+                              needs_overworld_rain: false
+                              party_species: null
+                              party_type: null
+                              relative_physical_stats: null
+                              time_of_day: ''
+                              trade_species: null
+                              trigger:
+                                name: level-up
+                                url: 'https://pokeapi.co/api/v2/evolution-trigger/1/'
+                              turn_upside_down: false
+                          evolves_to: []
+                          is_baby: false
+                          species:
+                            name: venusaur
+                            url: 'https://pokeapi.co/api/v2/pokemon-species/3/'
+                      is_baby: false
+                      species:
+                        name: ivysaur
+                        url: 'https://pokeapi.co/api/v2/pokemon-species/2/'
+                  is_baby: false
+                  species:
+                    name: bulbasaur
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/1/'
+                id: 1
