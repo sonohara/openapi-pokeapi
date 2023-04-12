@@ -26,32 +26,29 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GetPokemonsResponse'
-  '/pokemon/{id}':
+        '404':
+          $ref: '#/components/responses/404Response'
+      description: 'Pokémon are the creatures that inhabit the world of the Pokémon games. They can be caught using Pokéballs and trained by battling with other Pokémon. Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings. See Bulbapedia for greater detail.'
+  '/pokemon/{id-or-name}':
     get:
-      description: |
+      description: |-
         Pokémon are the creatures that inhabit the world of the Pokémon games.
         They can be caught using Pokéballs and trained by battling with other Pokémon.
-        Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings.
-        See Bulbapedia for greater detail.
+        Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings. See Bulbapedia for greater detail.
       tags:
         - Pokemon
       operationId: getPokemonById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
           $ref: '#/components/responses/GetPokemonByIdResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
     parameters:
       - schema:
           type: string
-        name: id
+        name: id-or-name
         in: path
         required: true
-        description: The identifier for this resource.
   /types:
     description: |
       Types are properties for Pokémon and their moves.
@@ -73,7 +70,9 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GetTypesResponse'
-  '/types/{id}':
+        '404':
+          $ref: '#/components/responses/404Response'
+  '/types/{id-or-name}':
     description: |
       Types are properties for Pokémon and their moves.
       Each type has three properties: which types of Pokémon it is super effective against, which types of Pokémon it is not very effective against, and which types of Pokémon it is completely ineffective against.
@@ -81,19 +80,15 @@ paths:
       tags:
         - Pokemon
       operationId: getTypeById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
           $ref: '#/components/responses/GetTypeByIdResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
     parameters:
       - schema:
           type: string
-        name: id
+        name: id-or-name
         in: path
         required: true
   /item:
@@ -118,7 +113,9 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GetItemsResponse'
-  '/item/{id}':
+        '404':
+          $ref: '#/components/responses/404Response'
+  '/item/{id-or-name}':
     description: |
       An item is an object in the games which the player can pick up, keep in their bag, and use in some manner.
       They have various uses, including healing, powering up, helping catch Pokémon, or to access a new area.
@@ -126,15 +123,172 @@ paths:
       tags:
         - Items
       operationId: getItemById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
           $ref: '#/components/responses/GetPokemonByIdResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+    parameters:
+      - schema:
+          type: string
+        name: id-or-name
+        in: path
+        required: true
+  /generation:
+    get:
+      summary: ''
+      responses:
+        '200':
+          $ref: '#/components/responses/GetGenerationsResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getGenerations
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: limit
+        - schema:
+            type: integer
+          in: query
+          name: offset
+      description: 'A generation is a grouping of the Pokémon games that separates them based on the Pokémon they include. In each generation, a new set of Pokémon, Moves, Abilities and Types that did not exist in the previous generation are released.'
+      tags:
+        - Games
+    parameters: []
+  '/generation/{id-or-name}':
+    get:
+      summary: ''
+      responses:
+        '200':
+          $ref: '#/components/responses/GetGenerationByIdResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getGenerationById
+      description: 'A generation is a grouping of the Pokémon games that separates them based on the Pokémon they include. In each generation, a new set of Pokémon, Moves, Abilities and Types that did not exist in the previous generation are released.'
+      tags:
+        - Games
+    parameters:
+      - schema:
+          type: string
+        name: id-or-name
+        in: path
+        required: true
+  '/version/{id-or-name}':
+    get:
+      summary: ''
+      responses:
+        '200':
+          $ref: '#/components/responses/GetVersionByIdResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getVersionById
+      description: 'Versions of the games, e.g., Red, Blue or Yellow.'
+      tags:
+        - Games
+    parameters:
+      - schema:
+          type: string
+        name: id-or-name
+        in: path
+        required: true
+  /version:
+    get:
+      summary: ''
+      responses:
+        '200':
+          $ref: '#/components/responses/GetVersionsResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getVersion
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: limit
+        - schema:
+            type: integer
+          in: query
+          name: offset
+      description: 'Versions of the games, e.g., Red, Blue or Yellow.'
+      tags:
+        - Games
+  '/version-group/{id-or-name}':
+    get:
+      summary: ''
+      responses:
+        '200':
+          $ref: '#/components/responses/GetVersionGroupByIdResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getVersionGroupById
+      description: Version groups categorize highly similar versions of the games.
+      requestBody:
+        content: {}
+      tags:
+        - Games
+    parameters:
+      - schema:
+          type: string
+        name: id-or-name
+        in: path
+        required: true
+  /version-group:
+    get:
+      summary: ''
+      responses:
+        '200':
+          $ref: '#/components/responses/GetVersionGroupsResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getVersionGroup
+      description: Version groups categorize highly similar versions of the games.
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: limit
+        - schema:
+            type: integer
+          in: query
+          name: offset
+      tags:
+        - Games
+  /pokemon-species:
+    get:
+      summary: ''
+      tags:
+        - Pokemon
+      responses:
+        '200':
+          $ref: '#/components/responses/GetPokemonSpeciesResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getPokemonSpecies
+      parameters:
+        - schema:
+            type: integer
+            default: 20
+          in: query
+          name: limit
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+      description: 'A Pokémon Species forms the basis for at least one Pokémon. Attributes of a Pokémon species are shared across all varieties of Pokémon within the species. A good example is Wormadam; Wormadam is the species which can be found in three different varieties, Wormadam-Trash, Wormadam-Sandy and Wormadam-Plant.'
+  '/pokemon-species/{id or name}':
+    get:
+      summary: ''
+      tags:
+        - Pokemon
+      responses:
+        '200':
+          $ref: '#/components/responses/GetPokemonSpeciesByIdResponse'
+        '404':
+          $ref: '#/components/responses/404Response'
+      operationId: getPokemonSpeciesById
+      description: 'A Pokémon Species forms the basis for at least one Pokémon. Attributes of a Pokémon species are shared across all varieties of Pokémon within the species. A good example is Wormadam; Wormadam is the species which can be found in three different varieties, Wormadam-Trash, Wormadam-Sandy and Wormadam-Plant.'
 components:
   schemas:
     PokemonAbility:
@@ -660,6 +814,93 @@ components:
         - text
         - language
         - version_group
+    PokemonSpeciesDexEntry:
+      type: object
+      properties:
+        entry_number:
+          type: integer
+          description: The index number within the Pokédex.
+        pokedex:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - entry_number
+        - pokedex
+    PalParkEncounterArea:
+      title: PalParkEncounterArea
+      type: object
+      properties:
+        base_score:
+          type: integer
+          description: The base score given to the player when the referenced Pokémon is caught during a pal park run.
+        rate:
+          type: integer
+          description: The base rate for encountering the referenced Pokémon in this pal park area.
+        area:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - base_score
+        - rate
+        - area
+    PokemonSpeciesVariety:
+      title: PokemonSpeciesVariety
+      type: object
+      properties:
+        is_default:
+          type: boolean
+          description: Whether this variety is the default variety.
+        pokemon:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - is_default
+        - pokemon
+    APIResource:
+      title: APIResource
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the referenced resource.
+      required:
+        - url
+    FlavorText:
+      title: FlavorText
+      type: object
+      properties:
+        flavor_text:
+          type: string
+          description: The localized flavor text for an API resource in a specific language. Note that this text is left unprocessed as it is found in game files. This means that it contains special characters that one might want to replace with their visible decodable version. Please check out this issue to find out more.
+        language:
+          $ref: '#/components/schemas/NamedAPIResource'
+        version:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - flavor_text
+        - language
+        - version
+    Description:
+      title: Description
+      type: object
+      properties:
+        description:
+          type: string
+          description: The localized description for an API resource in a specific language.
+        language:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - description
+        - language
+    Genus:
+      title: Genus
+      type: object
+      properties:
+        genus:
+          type: string
+          description: The localized genus for the referenced Pokémon species
+        language:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - genus
+        - language
   responses:
     GetPokemonsResponse:
       description: OK
@@ -1214,3 +1455,659 @@ components:
                           url: 'https://pokeapi.co/api/v2/version/16/'
                 baby_trigger_for:
                   url: 'https://pokeapi.co/api/v2/evolution-chain/1/'
+    GetGenerationsResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                nullable: true
+              previous:
+                type: string
+                format: uri
+                nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+            required:
+              - count
+              - next
+              - previous
+              - results
+          examples:
+            Example1:
+              value:
+                count: 9
+                next: null
+                previous: null
+                results:
+                  - name: generation-i
+                    url: 'https://pokeapi.co/api/v2/generation/1/'
+                  - name: generation-ii
+                    url: 'https://pokeapi.co/api/v2/generation/2/'
+                  - name: generation-iii
+                    url: 'https://pokeapi.co/api/v2/generation/3/'
+                  - name: generation-iv
+                    url: 'https://pokeapi.co/api/v2/generation/4/'
+                  - name: generation-v
+                    url: 'https://pokeapi.co/api/v2/generation/5/'
+                  - name: generation-vi
+                    url: 'https://pokeapi.co/api/v2/generation/6/'
+                  - name: generation-vii
+                    url: 'https://pokeapi.co/api/v2/generation/7/'
+                  - name: generation-viii
+                    url: 'https://pokeapi.co/api/v2/generation/8/'
+                  - name: generation-ix
+                    url: 'https://pokeapi.co/api/v2/generation/9/'
+    GetGenerationByIdResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: The identifier for this resource.
+              name:
+                type: string
+                description: The name for this resource.
+              abilities:
+                type: array
+                description: A list of abilities that were introduced in this generation.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+              main_region:
+                $ref: '#/components/schemas/NamedAPIResource'
+              moves:
+                type: array
+                description: A list of moves that were introduced in this generation.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+              names:
+                type: array
+                description: The name of this resource listed in different languages.
+                items:
+                  $ref: '#/components/schemas/Name'
+              pokemon_species:
+                type: array
+                description: A list of Pokémon species that were introduced in this generation.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+              types:
+                type: array
+                description: A list of types that were introduced in this generation.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+              version_groups:
+                type: array
+                description: A list of version groups that were introduced in this generation.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+            required:
+              - id
+              - name
+              - abilities
+              - main_region
+              - moves
+              - names
+              - pokemon_species
+              - types
+              - version_groups
+          examples:
+            Example1:
+              value:
+                id: 0
+                name: string
+                abilities:
+                  - name: string
+                    url: 'http://example.com'
+                main_region:
+                  name: string
+                  url: 'http://example.com'
+                moves:
+                  - name: string
+                    url: 'http://example.com'
+                names:
+                  - name: string
+                    language:
+                      name: string
+                      url: 'http://example.com'
+                pokemon_species:
+                  - name: string
+                    url: 'http://example.com'
+                types:
+                  - name: string
+                    url: 'http://example.com'
+                version_groups:
+                  - name: string
+                    url: 'http://example.com'
+    GetVersionsResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                nullable: true
+              previous:
+                type: string
+                format: uri
+                nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+            required:
+              - count
+              - next
+              - previous
+              - results
+          examples:
+            Example1:
+              value:
+                count: 39
+                next: 'https://pokeapi.co/api/v2/version?offset=20&limit=19'
+                previous: null
+                results:
+                  - name: red
+                    url: 'https://pokeapi.co/api/v2/version/1/'
+                  - name: blue
+                    url: 'https://pokeapi.co/api/v2/version/2/'
+                  - name: yellow
+                    url: 'https://pokeapi.co/api/v2/version/3/'
+                  - name: gold
+                    url: 'https://pokeapi.co/api/v2/version/4/'
+                  - name: silver
+                    url: 'https://pokeapi.co/api/v2/version/5/'
+                  - name: crystal
+                    url: 'https://pokeapi.co/api/v2/version/6/'
+                  - name: ruby
+                    url: 'https://pokeapi.co/api/v2/version/7/'
+                  - name: sapphire
+                    url: 'https://pokeapi.co/api/v2/version/8/'
+                  - name: emerald
+                    url: 'https://pokeapi.co/api/v2/version/9/'
+                  - name: firered
+                    url: 'https://pokeapi.co/api/v2/version/10/'
+                  - name: leafgreen
+                    url: 'https://pokeapi.co/api/v2/version/11/'
+                  - name: diamond
+                    url: 'https://pokeapi.co/api/v2/version/12/'
+                  - name: pearl
+                    url: 'https://pokeapi.co/api/v2/version/13/'
+                  - name: platinum
+                    url: 'https://pokeapi.co/api/v2/version/14/'
+                  - name: heartgold
+                    url: 'https://pokeapi.co/api/v2/version/15/'
+                  - name: soulsilver
+                    url: 'https://pokeapi.co/api/v2/version/16/'
+                  - name: black
+                    url: 'https://pokeapi.co/api/v2/version/17/'
+                  - name: white
+                    url: 'https://pokeapi.co/api/v2/version/18/'
+                  - name: colosseum
+                    url: 'https://pokeapi.co/api/v2/version/19/'
+                  - name: xd
+                    url: 'https://pokeapi.co/api/v2/version/20/'
+    GetVersionByIdResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              names:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Name'
+              version_group:
+                $ref: '#/components/schemas/NamedAPIResource'
+            required:
+              - id
+              - name
+              - names
+              - version_group
+          examples:
+            Example1:
+              value:
+                id: 1
+                name: red
+                names:
+                  - name: Rot
+                    language:
+                      name: de
+                      url: 'https://pokeapi.co/api/v2/language/6/'
+                version_group:
+                  name: red-blue
+                  url: 'https://pokeapi.co/api/v2/version-group/1/'
+    GetVersionGroupsResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                nullable: true
+              previous:
+                type: string
+                format: uri
+                nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+            required:
+              - count
+              - next
+              - previous
+              - results
+          examples:
+            Example1:
+              value:
+                count: 25
+                next: 'https://pokeapi.co/api/v2/version-group?offset=20&limit=5'
+                previous: null
+                results:
+                  - name: red-blue
+                    url: 'https://pokeapi.co/api/v2/version-group/1/'
+                  - name: yellow
+                    url: 'https://pokeapi.co/api/v2/version-group/2/'
+                  - name: gold-silver
+                    url: 'https://pokeapi.co/api/v2/version-group/3/'
+                  - name: crystal
+                    url: 'https://pokeapi.co/api/v2/version-group/4/'
+                  - name: ruby-sapphire
+                    url: 'https://pokeapi.co/api/v2/version-group/5/'
+                  - name: emerald
+                    url: 'https://pokeapi.co/api/v2/version-group/6/'
+                  - name: firered-leafgreen
+                    url: 'https://pokeapi.co/api/v2/version-group/7/'
+                  - name: diamond-pearl
+                    url: 'https://pokeapi.co/api/v2/version-group/8/'
+                  - name: platinum
+                    url: 'https://pokeapi.co/api/v2/version-group/9/'
+                  - name: heartgold-soulsilver
+                    url: 'https://pokeapi.co/api/v2/version-group/10/'
+                  - name: black-white
+                    url: 'https://pokeapi.co/api/v2/version-group/11/'
+                  - name: colosseum
+                    url: 'https://pokeapi.co/api/v2/version-group/12/'
+                  - name: xd
+                    url: 'https://pokeapi.co/api/v2/version-group/13/'
+                  - name: black-2-white-2
+                    url: 'https://pokeapi.co/api/v2/version-group/14/'
+                  - name: x-y
+                    url: 'https://pokeapi.co/api/v2/version-group/15/'
+                  - name: omega-ruby-alpha-sapphire
+                    url: 'https://pokeapi.co/api/v2/version-group/16/'
+                  - name: sun-moon
+                    url: 'https://pokeapi.co/api/v2/version-group/17/'
+                  - name: ultra-sun-ultra-moon
+                    url: 'https://pokeapi.co/api/v2/version-group/18/'
+                  - name: lets-go-pikachu-lets-go-eevee
+                    url: 'https://pokeapi.co/api/v2/version-group/19/'
+                  - name: sword-shield
+                    url: 'https://pokeapi.co/api/v2/version-group/20/'
+    GetVersionGroupByIdResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: The identifier for this resource.
+              name:
+                type: string
+                description: The name for this resource.
+              order:
+                type: integer
+                description: 'Order for sorting. Almost by date of release, except similar versions are grouped together.'
+              generation:
+                $ref: '#/components/schemas/NamedAPIResource'
+              move_learn_methods:
+                type: array
+                description: A list of methods in which Pokémon can learn moves in this version group.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+              pokedexes:
+                type: array
+                description: A list of Pokédexes introduces in this version group.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+              regions:
+                type: array
+                description: A list of regions that can be visited in this version group.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+              versions:
+                type: array
+                description: The versions this version group owns.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+            required:
+              - id
+              - name
+              - order
+              - generation
+              - move_learn_methods
+              - pokedexes
+              - regions
+              - versions
+          examples:
+            Example1:
+              value:
+                id: 1
+                name: red-blue
+                order: 1
+                generation:
+                  name: generation-i
+                  url: 'https://pokeapi.co/api/v2/generation/1/'
+                move_learn_methods:
+                  - name: level-up
+                    url: 'https://pokeapi.co/api/v2/move-learn-method/1/'
+                pokedexes:
+                  - name: kanto
+                    url: 'https://pokeapi.co/api/v2/pokedex/2/'
+                regions:
+                  - name: kanto
+                    url: 'https://pokeapi.co/api/v2/region/1/'
+                versions:
+                  - name: red
+                    url: 'https://pokeapi.co/api/v2/version/1/'
+    GetPokemonSpeciesResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                nullable: true
+              previous:
+                type: string
+                format: uri
+                nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+            required:
+              - count
+              - next
+              - previous
+              - results
+          examples:
+            Example1:
+              value:
+                count: 1008
+                next: 'https://pokeapi.co/api/v2/pokemon-species?offset=20&limit=20'
+                previous: null
+                results:
+                  - name: bulbasaur
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/1/'
+                  - name: ivysaur
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/2/'
+                  - name: venusaur
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/3/'
+                  - name: charmander
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/4/'
+                  - name: charmeleon
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/5/'
+                  - name: charizard
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/6/'
+                  - name: squirtle
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/7/'
+                  - name: wartortle
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/8/'
+                  - name: blastoise
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/9/'
+                  - name: caterpie
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/10/'
+                  - name: metapod
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/11/'
+                  - name: butterfree
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/12/'
+                  - name: weedle
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/13/'
+                  - name: kakuna
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/14/'
+                  - name: beedrill
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/15/'
+                  - name: pidgey
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/16/'
+                  - name: pidgeotto
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/17/'
+                  - name: pidgeot
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/18/'
+                  - name: rattata
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/19/'
+                  - name: raticate
+                    url: 'https://pokeapi.co/api/v2/pokemon-species/20/'
+    GetPokemonSpeciesByIdResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: The identifier for this resource.
+              name:
+                type: string
+                description: The name for this resource.
+              order:
+                type: integer
+                description: 'The order in which species should be sorted. Based on National Dex order, except families are grouped together and sorted by stage.'
+              gender_rate:
+                type: integer
+                description: 'The chance of this Pokémon being female, in eighths; or -1 for genderless.'
+              capture_rate:
+                type: integer
+                description: 'The base capture rate; up to 255. The higher the number, the easier the catch.'
+              base_happiness:
+                type: integer
+                description: 'The happiness when caught by a normal Pokéball; up to 255. The higher the number, the happier the Pokémon.'
+              is_baby:
+                type: boolean
+                description: Whether or not this is a baby Pokémon.
+              is_legendary:
+                type: boolean
+                description: Whether or not this is a legendary Pokémon.
+              is_mythical:
+                type: boolean
+                description: Whether or not this is a mythical Pokémon.
+              hatch_counter:
+                type: integer
+                description: 'Initial hatch counter: one must walk 255 × (hatch_counter + 1) steps before this Pokémon''s egg hatches, unless utilizing bonuses like Flame Body''s.'
+              has_gender_differences:
+                type: boolean
+                description: Whether or not this Pokémon has visual gender differences.
+              forms_switchable:
+                type: boolean
+                description: Whether or not this Pokémon has multiple forms and can switch between them.
+              growth_rate:
+                $ref: '#/components/schemas/NamedAPIResource'
+              pokedex_numbers:
+                description: A list of Pokedexes and the indexes reserved within them for this Pokémon species.
+                type: array
+                items:
+                  $ref: '#/components/schemas/PokemonSpeciesDexEntry'
+              egg_groups:
+                type: array
+                description: A list of egg groups this Pokémon species is a member of.
+                items:
+                  $ref: '#/components/schemas/NamedAPIResource'
+              color:
+                $ref: '#/components/schemas/NamedAPIResource'
+              shape:
+                $ref: '#/components/schemas/NamedAPIResource'
+              evolves_from_species:
+                $ref: '#/components/schemas/NamedAPIResource'
+              evolution_chain:
+                $ref: '#/components/schemas/APIResource'
+              habitat:
+                $ref: '#/components/schemas/NamedAPIResource'
+              generation:
+                $ref: '#/components/schemas/NamedAPIResource'
+              names:
+                type: array
+                description: The name of this resource listed in different languages.
+                items:
+                  $ref: '#/components/schemas/Name'
+              flavor_text_entries:
+                type: array
+                description: A list of flavor text entries for this Pokémon species.
+                items:
+                  $ref: '#/components/schemas/FlavorText'
+              form_descriptions:
+                type: array
+                description: Descriptions of different forms Pokémon take on within the Pokémon species.
+                items:
+                  $ref: '#/components/schemas/Description'
+              genera:
+                type: array
+                description: The genus of this Pokémon species listed in multiple languages.
+                items:
+                  $ref: '#/components/schemas/Genus'
+              varieties:
+                $ref: '#/components/schemas/PokemonSpeciesVariety'
+              pal_park_encounters:
+                type: array
+                description: A list of encounters that can be had with this Pokémon species in pal park.
+                items:
+                  $ref: '#/components/schemas/PalParkEncounterArea'
+            required:
+              - id
+              - name
+              - order
+              - gender_rate
+              - capture_rate
+              - base_happiness
+              - is_baby
+              - is_legendary
+              - is_mythical
+              - hatch_counter
+              - has_gender_differences
+              - forms_switchable
+              - growth_rate
+              - pokedex_numbers
+              - egg_groups
+              - color
+              - shape
+              - evolves_from_species
+              - evolution_chain
+              - habitat
+              - generation
+              - names
+              - flavor_text_entries
+              - form_descriptions
+              - genera
+              - varieties
+              - pal_park_encounters
+          examples:
+            Example1:
+              value:
+                id: 413
+                name: wormadam
+                order: 441
+                gender_rate: 8
+                capture_rate: 45
+                base_happiness: 70
+                is_baby: false
+                is_legendary: false
+                is_mythical: false
+                hatch_counter: 15
+                has_gender_differences: false
+                forms_switchable: false
+                growth_rate:
+                  name: medium
+                  url: 'https://pokeapi.co/api/v2/growth-rate/2/'
+                pokedex_numbers:
+                  - entry_number: 45
+                    pokedex:
+                      name: kalos-central
+                      url: 'https://pokeapi.co/api/v2/pokedex/12/'
+                egg_groups:
+                  - name: bug
+                    url: 'https://pokeapi.co/api/v2/egg-group/3/'
+                color:
+                  name: gray
+                  url: 'https://pokeapi.co/api/v2/pokemon-color/4/'
+                shape:
+                  name: squiggle
+                  url: 'https://pokeapi.co/api/v2/pokemon-shape/2/'
+                evolves_from_species:
+                  name: burmy
+                  url: 'https://pokeapi.co/api/v2/pokemon-species/412/'
+                evolution_chain:
+                  url: 'https://pokeapi.co/api/v2/evolution-chain/213/'
+                habitat: null
+                generation:
+                  name: generation-iv
+                  url: 'https://pokeapi.co/api/v2/generation/4/'
+                names:
+                  - name: Wormadam
+                    language:
+                      name: en
+                      url: 'https://pokeapi.co/api/v2/language/9/'
+                flavor_text_entries:
+                  - flavor_text: "When the bulb on\nits back grows\nlarge, it appears\fto lose the\nability to stand\non its hind legs."
+                    language:
+                      name: en
+                      url: 'https://pokeapi.co/api/v2/language/9/'
+                    version:
+                      name: red
+                      url: 'https://pokeapi.co/api/v2/version/1/'
+                form_descriptions:
+                  - description: 'Forms have different stats and movepools.  During evolution, Burmy''s current cloak becomes Wormadam''s form, and can no longer be changed.'
+                    language:
+                      name: en
+                      url: 'https://pokeapi.co/api/v2/language/9/'
+                genera:
+                  - genus: Bagworm
+                    language:
+                      name: en
+                      url: 'https://pokeapi.co/api/v2/language/9/'
+                varieties:
+                  - is_default: true
+                    pokemon:
+                      name: wormadam-plant
+                      url: 'https://pokeapi.co/api/v2/pokemon/413/'
+    404Response:
+      description: NotFound
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            Example1:
+              value: NotFound
