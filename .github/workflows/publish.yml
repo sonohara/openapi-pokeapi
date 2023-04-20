@@ -27,7 +27,9 @@ jobs:
       - run: sed -i 's/${tag_name}/${{ github.event.release.tag_name }}/g' common.yml
         working-directory: generator
       - run: npm run gen
-      - run: npm publish
+      - run: |
+          npm run build
+          npm publish dist
         working-directory: packages/typescript-angular
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
