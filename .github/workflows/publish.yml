@@ -30,8 +30,9 @@ jobs:
       - run: |
           npm install
           npm run build
-          npm publish dist
         working-directory: packages/typescript-angular
+      - run: npm publish
+        working-directory: packages/typescript-angular/dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm publish
