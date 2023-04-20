@@ -29,6 +29,7 @@ jobs:
         working-directory: generator
       - run: npm run gen
       - run: |
+          npm install
           npm run build
           npm publish dist
         working-directory: packages/typescript-angular
