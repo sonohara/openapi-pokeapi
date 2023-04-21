@@ -6,7 +6,7 @@
     "test": "redocly lint pokeapi.yml",
     "docs": "redocly build-docs pokeapi.yml --output docs/index.html",
     "gen": "openapi-generator-cli batch generator/generator-*.yml",
-    "gen:clean": "rm -rf ./packages"
+    "clean": "rm -rf ./packages"
   },
   "repository": {
     "type": "git",

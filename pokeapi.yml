@@ -371,13 +371,109 @@ paths:
         - Evolution
       responses:
         '200':
-          $ref: '#/components/responses/GetEvolutionTriggeByIdResponse'
+          $ref: '#/components/responses/GetEvolutionTriggerByIdResponse'
         '404':
           $ref: '#/components/responses/404Response'
       operationId: getEvolutionTriggerById
       description: Evolution triggers are the events and conditions that cause a Pokémon to evolve. Check out Bulbapedia for greater detail.
 components:
   schemas:
+    Pokemon:
+      title: Pokemon
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The identifier for this resource.
+        name:
+          type: string
+          description: The name for this resource.
+        base_experience:
+          type: integer
+          description: The base experience gained for defeating this Pokémon.
+        height:
+          type: integer
+          description: The height of this Pokémon in decimetres.
+        is_default:
+          type: boolean
+          description: Set for exactly one Pokémon used as the default for each species.
+        order:
+          type: integer
+          description: 'Order for sorting. Almost national order, except families are grouped together.'
+        weight:
+          type: integer
+          description: The weight of this Pokémon in hectograms.
+        abilities:
+          description: A list of abilities this Pokémon could potentially have.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonAbility'
+        forms:
+          description: A list of forms this Pokémon can take on.
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        game_indices:
+          description: A list of game indices relevent to Pokémon item by generation.
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionGameIndex'
+        held_items:
+          description: A list of items this Pokémon may be holding when encountered.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonHeldItem'
+        location_area_encounters:
+          description: 'A link to a list of location areas, as well as encounter details pertaining to specific versions.'
+          type: string
+        moves:
+          description: A list of moves along with learn methods and level details pertaining to specific version groups.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonMove'
+        past_types:
+          description: A list of details showing types this pokémon had in previous generations
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonTypePast'
+        sprites:
+          description: A set of sprites used to depict this Pokémon in the game. A visual representation of the various sprites can be found at PokeAPI/sprites
+          $ref: '#/components/schemas/PokemonSprites'
+        species:
+          description: The species this Pokémon belongs to.
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        stats:
+          description: A list of base stat values for this Pokémon.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonStat'
+        types:
+          description: A list of details showing types this Pokémon has.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonType'
+      required:
+        - id
+        - name
+        - base_experience
+        - height
+        - is_default
+        - order
+        - weight
+        - abilities
+        - forms
+        - game_indices
+        - held_items
+        - location_area_encounters
+        - moves
+        - past_types
+        - sprites
+        - species
+        - stats
+        - types
+      description: 'Pokémon are the creatures that inhabit the world of the Pokémon games. They can be caught using Pokéballs and trained by battling with other Pokémon. Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings. See Bulbapedia for greater detail.'
     PokemonAbility:
       type: object
       properties:
@@ -412,6 +508,7 @@ components:
       required:
         - slot
         - type
+      title: ''
     PokemonFormType:
       type: object
       properties:
@@ -1085,46 +1182,442 @@ components:
         - time_of_day
         - trade_species
         - turn_upside_down
+    ResourceList:
+      type: object
+      description: a paginated list of available resources for that API
+      properties:
+        count:
+          type: integer
+          description: The total number of resources available from this API.
+        next:
+          type: string
+          format: uri
+          description: The URL for the next page in the list.
+          nullable: true
+        previous:
+          type: string
+          format: uri
+          description: The URL for the previous page in the list.
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - count
+        - next
+        - previous
+        - results
+    GameGeneration:
+      title: GameGeneration
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The identifier for this resource.
+        name:
+          type: string
+          description: The name for this resource.
+        abilities:
+          type: array
+          description: A list of abilities that were introduced in this generation.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        main_region:
+          $ref: '#/components/schemas/NamedAPIResource'
+        moves:
+          type: array
+          description: A list of moves that were introduced in this generation.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        names:
+          type: array
+          description: The name of this resource listed in different languages.
+          items:
+            $ref: '#/components/schemas/Name'
+        pokemon_species:
+          type: array
+          description: A list of Pokémon species that were introduced in this generation.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        types:
+          type: array
+          description: A list of types that were introduced in this generation.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        version_groups:
+          type: array
+          description: A list of version groups that were introduced in this generation.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - id
+        - name
+        - abilities
+        - main_region
+        - moves
+        - names
+        - pokemon_species
+        - types
+        - version_groups
+      description: 'A generation is a grouping of the Pokémon games that separates them based on the Pokémon they include. In each generation, a new set of Pokémon, Moves, Abilities and Types that did not exist in the previous generation are released.'
+    Item:
+      title: Item
+      type: object
+      properties:
+        id:
+          description: The identifier for this resource.
+          type: integer
+        name:
+          description: The name for this resource.
+          type: string
+        cost:
+          description: The price of this item in stores.
+          type: integer
+        fling_power:
+          description: The power of the move Fling when used with this item.
+          type: integer
+        fling_effect:
+          description: The effect of the move Fling when used with this item.
+          $ref: '#/components/schemas/NamedAPIResource'
+        attributes:
+          description: A list of attributes this item has.
+          $ref: '#/components/schemas/NamedAPIResource'
+        category:
+          description: The category of items this item falls into.
+          $ref: '#/components/schemas/NamedAPIResource'
+        effect_entries:
+          description: The effect of this ability listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/VerboseEffect'
+        flavor_text_entries:
+          description: The flavor text of this ability listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionGroupFlavorText'
+        game_indices:
+          description: A list of game indices relevent to this item by generation.
+          type: array
+          items:
+            $ref: '#/components/schemas/GenerationGameIndex'
+        names:
+          description: The name of this item listed in different languages.
+          type: array
+          items:
+            $ref: '#/components/schemas/Name'
+        sprites:
+          description: A set of sprites used to depict this item in the game.
+          $ref: '#/components/schemas/ItemSprites'
+        held_by_pokemon:
+          description: A list of Pokémon that might be found in the wild holding this item.
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemHolderPokemon'
+        baby_trigger_for:
+          description: An evolution chain this item requires to produce a bay during mating.
+          $ref: '#/components/schemas/NamedAPIResource'
+        machines:
+          description: A list of the machines related to this item.
+          type: array
+          items:
+            $ref: '#/components/schemas/MachineVersionDetail'
+      required:
+        - id
+        - name
+        - cost
+        - fling_power
+        - fling_effect
+        - attributes
+        - category
+        - effect_entries
+        - flavor_text_entries
+        - game_indices
+        - names
+        - sprites
+        - held_by_pokemon
+        - baby_trigger_for
+        - machines
+      description: 'An item is an object in the games which the player can pick up, keep in their bag, and use in some manner. They have various uses, including healing, powering up, helping catch Pokémon, or to access a new area.'
+    GameVersion:
+      title: GameVersion
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        names:
+          type: array
+          items:
+            $ref: '#/components/schemas/Name'
+        version_group:
+          $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - id
+        - name
+        - names
+        - version_group
+      description: 'Versions of the games, e.g., Red, Blue or Yellow.'
+    GameVersionGroup:
+      title: GameVersionGroup
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The identifier for this resource.
+        name:
+          type: string
+          description: The name for this resource.
+        order:
+          type: integer
+          description: 'Order for sorting. Almost by date of release, except similar versions are grouped together.'
+        generation:
+          $ref: '#/components/schemas/NamedAPIResource'
+        move_learn_methods:
+          type: array
+          description: A list of methods in which Pokémon can learn moves in this version group.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        pokedexes:
+          type: array
+          description: A list of Pokédexes introduces in this version group.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        regions:
+          type: array
+          description: A list of regions that can be visited in this version group.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        versions:
+          type: array
+          description: The versions this version group owns.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - id
+        - name
+        - order
+        - generation
+        - move_learn_methods
+        - pokedexes
+        - regions
+        - versions
+      description: Version groups categorize highly similar versions of the games.
+    PokemonSpecies:
+      title: PokemonSpecies
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The identifier for this resource.
+        name:
+          type: string
+          description: The name for this resource.
+        order:
+          type: integer
+          description: 'The order in which species should be sorted. Based on National Dex order, except families are grouped together and sorted by stage.'
+        gender_rate:
+          type: integer
+          description: 'The chance of this Pokémon being female, in eighths; or -1 for genderless.'
+        capture_rate:
+          type: integer
+          description: 'The base capture rate; up to 255. The higher the number, the easier the catch.'
+        base_happiness:
+          type: integer
+          description: 'The happiness when caught by a normal Pokéball; up to 255. The higher the number, the happier the Pokémon.'
+        is_baby:
+          type: boolean
+          description: Whether or not this is a baby Pokémon.
+        is_legendary:
+          type: boolean
+          description: Whether or not this is a legendary Pokémon.
+        is_mythical:
+          type: boolean
+          description: Whether or not this is a mythical Pokémon.
+        hatch_counter:
+          type: integer
+          description: 'Initial hatch counter: one must walk 255 × (hatch_counter + 1) steps before this Pokémon''s egg hatches, unless utilizing bonuses like Flame Body''s.'
+        has_gender_differences:
+          type: boolean
+          description: Whether or not this Pokémon has visual gender differences.
+        forms_switchable:
+          type: boolean
+          description: Whether or not this Pokémon has multiple forms and can switch between them.
+        growth_rate:
+          $ref: '#/components/schemas/NamedAPIResource'
+        pokedex_numbers:
+          description: A list of Pokedexes and the indexes reserved within them for this Pokémon species.
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonSpeciesDexEntry'
+        egg_groups:
+          type: array
+          description: A list of egg groups this Pokémon species is a member of.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+        color:
+          $ref: '#/components/schemas/NamedAPIResource'
+        shape:
+          $ref: '#/components/schemas/NamedAPIResource'
+        evolves_from_species:
+          $ref: '#/components/schemas/NamedAPIResource'
+        evolution_chain:
+          $ref: '#/components/schemas/APIResource'
+        habitat:
+          $ref: '#/components/schemas/NamedAPIResource'
+        generation:
+          $ref: '#/components/schemas/NamedAPIResource'
+        names:
+          type: array
+          description: The name of this resource listed in different languages.
+          items:
+            $ref: '#/components/schemas/Name'
+        flavor_text_entries:
+          type: array
+          description: A list of flavor text entries for this Pokémon species.
+          items:
+            $ref: '#/components/schemas/FlavorText'
+        form_descriptions:
+          type: array
+          description: Descriptions of different forms Pokémon take on within the Pokémon species.
+          items:
+            $ref: '#/components/schemas/Description'
+        genera:
+          type: array
+          description: The genus of this Pokémon species listed in multiple languages.
+          items:
+            $ref: '#/components/schemas/Genus'
+        varieties:
+          $ref: '#/components/schemas/PokemonSpeciesVariety'
+        pal_park_encounters:
+          type: array
+          description: A list of encounters that can be had with this Pokémon species in pal park.
+          items:
+            $ref: '#/components/schemas/PalParkEncounterArea'
+      required:
+        - id
+        - name
+        - order
+        - gender_rate
+        - capture_rate
+        - base_happiness
+        - is_baby
+        - is_legendary
+        - is_mythical
+        - hatch_counter
+        - has_gender_differences
+        - forms_switchable
+        - growth_rate
+        - pokedex_numbers
+        - egg_groups
+        - color
+        - shape
+        - evolves_from_species
+        - evolution_chain
+        - habitat
+        - generation
+        - names
+        - flavor_text_entries
+        - form_descriptions
+        - genera
+        - varieties
+        - pal_park_encounters
+      description: 'A Pokémon Species forms the basis for at least one Pokémon. Attributes of a Pokémon species are shared across all varieties of Pokémon within the species. A good example is Wormadam; Wormadam is the species which can be found in three different varieties, Wormadam-Trash, Wormadam-Sandy and Wormadam-Plant.'
+    PokemonEvolutionTrigger:
+      title: PokemonEvolutionTrigger
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The identifier for this resource.
+        name:
+          type: string
+          description: The name for this resource.
+        names:
+          type: array
+          description: The name of this resource listed in different languages.
+          items:
+            $ref: '#/components/schemas/Name'
+        pokemon_species:
+          type: array
+          description: A list of pokemon species that result from this evolution trigger.
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - id
+        - name
+        - names
+        - pokemon_species
+      description: Evolution triggers are the events and conditions that cause a Pokémon to evolve. Check out Bulbapedia for greater detail.
+    PokemonEvolutionChain:
+      title: PokemonEvolutionChain
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The identifier for this resource.
+        baby_trigger_item:
+          $ref: '#/components/schemas/NamedAPIResource'
+        chain:
+          $ref: '#/components/schemas/ChainLink'
+      required:
+        - id
+        - baby_trigger_item
+        - chain
+      description: Evolution chains are essentially family trees. They start with the lowest stage within a family and detail evolution conditions for each as well as Pokémon they can evolve into up through the hierarchy.
+    Type:
+      type: object
+      description: 'Types are properties for Pokémon and their moves. Each type has three properties: which types of Pokémon it is super effective against, which types of Pokémon it is not very effective against, and which types of Pokémon it is completely ineffective against.'
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        damage_relations:
+          $ref: '#/components/schemas/TypeRelations'
+        past_damage_relations:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypeRelationsPast'
+        game_indices:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenerationGameIndex'
+        generation:
+          $ref: '#/components/schemas/NamedAPIResource'
+        move_damage_class:
+          $ref: '#/components/schemas/NamedAPIResource'
+        names:
+          type: array
+          items:
+            $ref: '#/components/schemas/Name'
+        pokemon:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypePokemon'
+        moves:
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedAPIResource'
+      required:
+        - id
+        - name
+        - damage_relations
+        - past_damage_relations
+        - game_indices
+        - generation
+        - move_damage_class
+        - names
+        - pokemon
+        - moves
   responses:
     GetPokemonsResponse:
       description: OK
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: integer
-                description: The total number of resources available from this API.
-              next:
-                description: The URL for the next page in the list.
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                description: The URL for the previous page in the list.
-                format: uri
-                nullable: true
-              results:
-                type: array
-                description: A list of named API resources.
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    url:
-                      type: string
-                      format: uri
-                  required:
-                    - name
-                    - url
-            required:
-              - count
-              - next
-              - previous
-              - results
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -1177,99 +1670,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The identifier for this resource.
-              name:
-                type: string
-                description: The name for this resource.
-              base_experience:
-                type: integer
-                description: The base experience gained for defeating this Pokémon.
-              height:
-                type: integer
-                description: The height of this Pokémon in decimetres.
-              is_default:
-                type: boolean
-                description: Set for exactly one Pokémon used as the default for each species.
-              order:
-                type: integer
-                description: 'Order for sorting. Almost national order, except families are grouped together.'
-              weight:
-                type: integer
-                description: The weight of this Pokémon in hectograms.
-              abilities:
-                description: A list of abilities this Pokémon could potentially have.
-                type: array
-                items:
-                  $ref: '#/components/schemas/PokemonAbility'
-              forms:
-                description: A list of forms this Pokémon can take on.
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              game_indices:
-                description: A list of game indices relevent to Pokémon item by generation.
-                type: array
-                items:
-                  $ref: '#/components/schemas/VersionGameIndex'
-              held_items:
-                description: A list of items this Pokémon may be holding when encountered.
-                type: array
-                items:
-                  $ref: '#/components/schemas/PokemonHeldItem'
-              location_area_encounters:
-                description: 'A link to a list of location areas, as well as encounter details pertaining to specific versions.'
-                type: string
-              moves:
-                description: A list of moves along with learn methods and level details pertaining to specific version groups.
-                type: array
-                items:
-                  $ref: '#/components/schemas/PokemonMove'
-              past_types:
-                description: A list of details showing types this pokémon had in previous generations
-                type: array
-                items:
-                  $ref: '#/components/schemas/PokemonTypePast'
-              sprites:
-                description: A set of sprites used to depict this Pokémon in the game. A visual representation of the various sprites can be found at PokeAPI/sprites
-                $ref: '#/components/schemas/PokemonSprites'
-              species:
-                description: The species this Pokémon belongs to.
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              stats:
-                description: A list of base stat values for this Pokémon.
-                type: array
-                items:
-                  $ref: '#/components/schemas/PokemonStat'
-              types:
-                description: A list of details showing types this Pokémon has.
-                type: array
-                items:
-                  $ref: '#/components/schemas/PokemonType'
-            required:
-              - id
-              - name
-              - base_experience
-              - height
-              - is_default
-              - order
-              - weight
-              - abilities
-              - forms
-              - game_indices
-              - held_items
-              - location_area_encounters
-              - moves
-              - past_types
-              - sprites
-              - species
-              - stats
-              - types
+            $ref: '#/components/schemas/Pokemon'
           examples:
             Example1:
               value:
@@ -1345,45 +1746,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: number
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    url:
-                      type: string
-                      format: uri
-                  required:
-                    - name
-                    - url
-            required:
-              - count
-              - next
-              - previous
-              - results
-            example:
-              count: 20
-              next: null
-              previous: null
-              results:
-                - name: normal
-                  url: 'https://pokeapi.co/api/v2/type/1/'
-                - name: fighting
-                  url: 'https://pokeapi.co/api/v2/type/2/'
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -1400,100 +1763,84 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: number
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    url:
-                      type: string
-                      format: uri
-                  required:
-                    - name
-                    - url
-            required:
-              - count
-              - next
-              - previous
-              - results
-            example:
-              count: 20
-              next: null
-              previous: null
-              results:
-                - name: normal
-                  url: 'https://pokeapi.co/api/v2/type/1/'
-                - name: fighting
-                  url: 'https://pokeapi.co/api/v2/type/2/'
+            $ref: '#/components/schemas/Type'
           examples:
             Example1:
               value:
-                count: 20
-                next: null
-                previous: null
-                results:
-                  - name: normal
-                    url: 'https://pokeapi.co/api/v2/type/1/'
-                  - name: fighting
-                    url: 'https://pokeapi.co/api/v2/type/2/'
+                id: 5
+                name: ground
+                damage_relations:
+                  no_damage_to:
+                    - name: flying
+                      url: 'https://pokeapi.co/api/v2/type/3/'
+                  half_damage_to:
+                    - name: bug
+                      url: 'https://pokeapi.co/api/v2/type/7/'
+                  double_damage_to:
+                    - name: poison
+                      url: 'https://pokeapi.co/api/v2/type/4/'
+                  no_damage_from:
+                    - name: electric
+                      url: 'https://pokeapi.co/api/v2/type/13/'
+                  half_damage_from:
+                    - name: poison
+                      url: 'https://pokeapi.co/api/v2/type/4/'
+                  double_damage_from:
+                    - name: water
+                      url: 'https://pokeapi.co/api/v2/type/11/'
+                past_damage_relations:
+                  - generation:
+                      name: generation-v
+                      url: 'https://pokeapi.co/api/v2/generation/5/'
+                    damage_relations:
+                      no_damage_to:
+                        - name: normal
+                          url: 'https://pokeapi.co/api/v2/type/1/'
+                      half_damage_to:
+                        - name: steel
+                          url: 'https://pokeapi.co/api/v2/type/9/'
+                      double_damage_to:
+                        - name: ghost
+                          url: 'https://pokeapi.co/api/v2/type/8/'
+                      no_damage_from:
+                        - name: normal
+                          url: 'https://pokeapi.co/api/v2/type/1/'
+                      half_damage_from:
+                        - name: poison
+                          url: 'https://pokeapi.co/api/v2/type/4/'
+                      double_damage_from:
+                        - name: ghost
+                          url: 'https://pokeapi.co/api/v2/type/8/'
+                game_indices:
+                  - game_index: 4
+                    generation:
+                      name: generation-i
+                      url: 'https://pokeapi.co/api/v2/generation/1/'
+                generation:
+                  name: generation-i
+                  url: 'https://pokeapi.co/api/v2/generation/1/'
+                move_damage_class:
+                  name: physical
+                  url: 'https://pokeapi.co/api/v2/move-damage-class/2/'
+                names:
+                  - name: aa
+                    language:
+                      name: ja
+                      url: 'https://pokeapi.co/api/v2/language/1/'
+                pokemon:
+                  - slot: 1
+                    pokemon:
+                      name: sandshrew
+                      url: 'https://pokeapi.co/api/v2/pokemon/27/'
+                moves:
+                  - name: sand-attack
+                    url: 'https://pokeapi.co/api/v2/move/28/'
     GetItemsResponse:
       description: OK
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: number
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    url:
-                      type: string
-                      format: uri
-                  required:
-                    - name
-                    - url
-            required:
-              - count
-              - next
-              - previous
-              - results
-            example:
-              count: 2050
-              next: 'https://pokeapi.co/api/v2/item?offset=20&limit=20'
-              previous: null
-              results:
-                - name: master-ball
-                  url: 'https://pokeapi.co/api/v2/item/1/'
-                - name: ultra-bal
-                  url: 'https://pokeapi.co/api/v2/item/2/'
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -1510,81 +1857,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                description: The identifier for this resource.
-                type: integer
-              name:
-                description: The name for this resource.
-                type: string
-              cost:
-                description: The price of this item in stores.
-                type: integer
-              fling_power:
-                description: The power of the move Fling when used with this item.
-                type: integer
-              fling_effect:
-                description: The effect of the move Fling when used with this item.
-                $ref: '#/components/schemas/NamedAPIResource'
-              attributes:
-                description: A list of attributes this item has.
-                $ref: '#/components/schemas/NamedAPIResource'
-              category:
-                description: The category of items this item falls into.
-                $ref: '#/components/schemas/NamedAPIResource'
-              effect_entries:
-                description: The effect of this ability listed in different languages.
-                type: array
-                items:
-                  $ref: '#/components/schemas/VerboseEffect'
-              flavor_text_entries:
-                description: The flavor text of this ability listed in different languages.
-                type: array
-                items:
-                  $ref: '#/components/schemas/VersionGroupFlavorText'
-              game_indices:
-                description: A list of game indices relevent to this item by generation.
-                type: array
-                items:
-                  $ref: '#/components/schemas/GenerationGameIndex'
-              names:
-                description: The name of this item listed in different languages.
-                type: array
-                items:
-                  $ref: '#/components/schemas/Name'
-              sprites:
-                description: A set of sprites used to depict this item in the game.
-                $ref: '#/components/schemas/ItemSprites'
-              held_by_pokemon:
-                description: A list of Pokémon that might be found in the wild holding this item.
-                type: array
-                items:
-                  $ref: '#/components/schemas/ItemHolderPokemon'
-              baby_trigger_for:
-                description: An evolution chain this item requires to produce a bay during mating.
-                $ref: '#/components/schemas/NamedAPIResource'
-              machines:
-                description: A list of the machines related to this item.
-                type: array
-                items:
-                  $ref: '#/components/schemas/MachineVersionDetail'
-            required:
-              - id
-              - name
-              - cost
-              - fling_power
-              - fling_effect
-              - attributes
-              - category
-              - effect_entries
-              - flavor_text_entries
-              - game_indices
-              - names
-              - sprites
-              - held_by_pokemon
-              - baby_trigger_for
-              - machines
+            $ref: '#/components/schemas/Item'
           examples:
             Example1:
               value:
@@ -1644,27 +1917,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: integer
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - count
-              - next
-              - previous
-              - results
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -1695,56 +1948,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The identifier for this resource.
-              name:
-                type: string
-                description: The name for this resource.
-              abilities:
-                type: array
-                description: A list of abilities that were introduced in this generation.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              main_region:
-                $ref: '#/components/schemas/NamedAPIResource'
-              moves:
-                type: array
-                description: A list of moves that were introduced in this generation.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              names:
-                type: array
-                description: The name of this resource listed in different languages.
-                items:
-                  $ref: '#/components/schemas/Name'
-              pokemon_species:
-                type: array
-                description: A list of Pokémon species that were introduced in this generation.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              types:
-                type: array
-                description: A list of types that were introduced in this generation.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              version_groups:
-                type: array
-                description: A list of version groups that were introduced in this generation.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - id
-              - name
-              - abilities
-              - main_region
-              - moves
-              - names
-              - pokemon_species
-              - types
-              - version_groups
+            $ref: '#/components/schemas/GameGeneration'
           examples:
             Example1:
               value:
@@ -1778,27 +1982,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: integer
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - count
-              - next
-              - previous
-              - results
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -1851,23 +2035,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-              names:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Name'
-              version_group:
-                $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - id
-              - name
-              - names
-              - version_group
+            $ref: '#/components/schemas/GameVersion'
           examples:
             Example1:
               value:
@@ -1886,27 +2054,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: integer
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - count
-              - next
-              - previous
-              - results
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -1959,48 +2107,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The identifier for this resource.
-              name:
-                type: string
-                description: The name for this resource.
-              order:
-                type: integer
-                description: 'Order for sorting. Almost by date of release, except similar versions are grouped together.'
-              generation:
-                $ref: '#/components/schemas/NamedAPIResource'
-              move_learn_methods:
-                type: array
-                description: A list of methods in which Pokémon can learn moves in this version group.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              pokedexes:
-                type: array
-                description: A list of Pokédexes introduces in this version group.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              regions:
-                type: array
-                description: A list of regions that can be visited in this version group.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              versions:
-                type: array
-                description: The versions this version group owns.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - id
-              - name
-              - order
-              - generation
-              - move_learn_methods
-              - pokedexes
-              - regions
-              - versions
+            $ref: '#/components/schemas/GameVersionGroup'
           examples:
             Example1:
               value:
@@ -2027,27 +2134,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: integer
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - count
-              - next
-              - previous
-              - results
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -2100,123 +2187,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The identifier for this resource.
-              name:
-                type: string
-                description: The name for this resource.
-              order:
-                type: integer
-                description: 'The order in which species should be sorted. Based on National Dex order, except families are grouped together and sorted by stage.'
-              gender_rate:
-                type: integer
-                description: 'The chance of this Pokémon being female, in eighths; or -1 for genderless.'
-              capture_rate:
-                type: integer
-                description: 'The base capture rate; up to 255. The higher the number, the easier the catch.'
-              base_happiness:
-                type: integer
-                description: 'The happiness when caught by a normal Pokéball; up to 255. The higher the number, the happier the Pokémon.'
-              is_baby:
-                type: boolean
-                description: Whether or not this is a baby Pokémon.
-              is_legendary:
-                type: boolean
-                description: Whether or not this is a legendary Pokémon.
-              is_mythical:
-                type: boolean
-                description: Whether or not this is a mythical Pokémon.
-              hatch_counter:
-                type: integer
-                description: 'Initial hatch counter: one must walk 255 × (hatch_counter + 1) steps before this Pokémon''s egg hatches, unless utilizing bonuses like Flame Body''s.'
-              has_gender_differences:
-                type: boolean
-                description: Whether or not this Pokémon has visual gender differences.
-              forms_switchable:
-                type: boolean
-                description: Whether or not this Pokémon has multiple forms and can switch between them.
-              growth_rate:
-                $ref: '#/components/schemas/NamedAPIResource'
-              pokedex_numbers:
-                description: A list of Pokedexes and the indexes reserved within them for this Pokémon species.
-                type: array
-                items:
-                  $ref: '#/components/schemas/PokemonSpeciesDexEntry'
-              egg_groups:
-                type: array
-                description: A list of egg groups this Pokémon species is a member of.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-              color:
-                $ref: '#/components/schemas/NamedAPIResource'
-              shape:
-                $ref: '#/components/schemas/NamedAPIResource'
-              evolves_from_species:
-                $ref: '#/components/schemas/NamedAPIResource'
-              evolution_chain:
-                $ref: '#/components/schemas/APIResource'
-              habitat:
-                $ref: '#/components/schemas/NamedAPIResource'
-              generation:
-                $ref: '#/components/schemas/NamedAPIResource'
-              names:
-                type: array
-                description: The name of this resource listed in different languages.
-                items:
-                  $ref: '#/components/schemas/Name'
-              flavor_text_entries:
-                type: array
-                description: A list of flavor text entries for this Pokémon species.
-                items:
-                  $ref: '#/components/schemas/FlavorText'
-              form_descriptions:
-                type: array
-                description: Descriptions of different forms Pokémon take on within the Pokémon species.
-                items:
-                  $ref: '#/components/schemas/Description'
-              genera:
-                type: array
-                description: The genus of this Pokémon species listed in multiple languages.
-                items:
-                  $ref: '#/components/schemas/Genus'
-              varieties:
-                $ref: '#/components/schemas/PokemonSpeciesVariety'
-              pal_park_encounters:
-                type: array
-                description: A list of encounters that can be had with this Pokémon species in pal park.
-                items:
-                  $ref: '#/components/schemas/PalParkEncounterArea'
-            required:
-              - id
-              - name
-              - order
-              - gender_rate
-              - capture_rate
-              - base_happiness
-              - is_baby
-              - is_legendary
-              - is_mythical
-              - hatch_counter
-              - has_gender_differences
-              - forms_switchable
-              - growth_rate
-              - pokedex_numbers
-              - egg_groups
-              - color
-              - shape
-              - evolves_from_species
-              - evolution_chain
-              - habitat
-              - generation
-              - names
-              - flavor_text_entries
-              - form_descriptions
-              - genera
-              - varieties
-              - pal_park_encounters
+            $ref: '#/components/schemas/PokemonSpecies'
           examples:
             Example1:
               value:
@@ -2300,27 +2271,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: integer
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - count
-              - next
-              - previous
-              - results
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -2353,19 +2304,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The identifier for this resource.
-              baby_trigger_item:
-                $ref: '#/components/schemas/NamedAPIResource'
-              chain:
-                $ref: '#/components/schemas/ChainLink'
-            required:
-              - id
-              - baby_trigger_item
-              - chain
+            $ref: '#/components/schemas/PokemonEvolutionChain'
           examples:
             Example1:
               value:
@@ -2435,27 +2374,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              count:
-                type: integer
-              next:
-                type: string
-                format: uri
-                nullable: true
-              previous:
-                type: string
-                format: uri
-                nullable: true
-              results:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - count
-              - next
-              - previous
-              - results
+            $ref: '#/components/schemas/ResourceList'
           examples:
             Example1:
               value:
@@ -2489,34 +2408,12 @@ components:
                     url: 'https://pokeapi.co/api/v2/evolution-trigger/12/'
                   - name: recoil-damage
                     url: 'https://pokeapi.co/api/v2/evolution-trigger/13/'
-    GetEvolutionTriggeByIdResponse:
+    GetEvolutionTriggerByIdResponse:
       description: OK
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The identifier for this resource.
-              name:
-                type: string
-                description: The name for this resource.
-              names:
-                type: array
-                description: The name of this resource listed in different languages.
-                items:
-                  $ref: '#/components/schemas/Name'
-              pokemon_species:
-                type: array
-                description: A list of pokemon species that result from this evolution trigger.
-                items:
-                  $ref: '#/components/schemas/NamedAPIResource'
-            required:
-              - id
-              - name
-              - names
-              - pokemon_species
+            $ref: '#/components/schemas/PokemonEvolutionTrigger'
           examples:
             Example1:
               value:
