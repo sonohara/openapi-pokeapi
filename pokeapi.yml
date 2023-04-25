@@ -909,6 +909,7 @@ components:
           type: string
           format: uri
       required:
+        - name
         - url
     Language:
       type: object
