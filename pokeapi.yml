@@ -381,6 +381,7 @@ components:
     Pokemon:
       title: Pokemon
       type: object
+      description: 'Pokémon are the creatures that inhabit the world of the Pokémon games. They can be caught using Pokéballs and trained by battling with other Pokémon. Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings. See Bulbapedia for greater detail.'
       properties:
         id:
           type: integer
@@ -437,13 +438,9 @@ components:
           items:
             $ref: '#/components/schemas/PokemonTypePast'
         sprites:
-          description: A set of sprites used to depict this Pokémon in the game. A visual representation of the various sprites can be found at PokeAPI/sprites
           $ref: '#/components/schemas/PokemonSprites'
         species:
-          description: The species this Pokémon belongs to.
-          type: array
-          items:
-            $ref: '#/components/schemas/NamedAPIResource'
+          $ref: '#/components/schemas/NamedAPIResource'
         stats:
           description: A list of base stat values for this Pokémon.
           type: array
@@ -473,7 +470,6 @@ components:
         - species
         - stats
         - types
-      description: 'Pokémon are the creatures that inhabit the world of the Pokémon games. They can be caught using Pokéballs and trained by battling with other Pokémon. Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings. See Bulbapedia for greater detail.'
     PokemonAbility:
       type: object
       properties:
