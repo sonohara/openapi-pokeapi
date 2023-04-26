@@ -610,7 +610,7 @@ components:
           description: The default depiction of this Pokémon from the front in battle.
           type: string
           format: uri
-          nullable: false
+          nullable: true
         front_shiny:
           description: The shiny depiction of this Pokémon from the front in battle.
           type: string
@@ -620,7 +620,7 @@ components:
           description: The female depiction of this Pokémon from the front in battle.
           type: string
           format: uri
-          nullable: false
+          nullable: true
         front_shiny_female:
           description: The shiny female depiction of this Pokémon from the front in battle.
           type: string
@@ -630,7 +630,7 @@ components:
           description: The default depiction of this Pokémon from the back in battle.
           type: string
           format: uri
-          nullable: false
+          nullable: true
         back_shiny:
           description: The shiny depiction of this Pokémon from the back in battle.
           type: string
@@ -640,12 +640,331 @@ components:
           description: The female depiction of this Pokémon from the back in battle.
           type: string
           format: uri
-          nullable: false
+          nullable: true
         back_shiny_female:
           description: The shiny female depiction of this Pokémon from the back in battle.
           type: string
           format: uri
           nullable: true
+        other:
+          type: object
+          required:
+            - dream_world
+            - home
+            - official-artwork
+            - versions
+          properties:
+            dream_world:
+              type: object
+              required:
+                - front_default
+                - front_female
+              properties:
+                front_default:
+                  type: string
+                  format: uri
+                  nullable: true
+                front_female:
+                  type: string
+                  format: uri
+                  nullable: true
+            home:
+              type: object
+              required:
+                - front_default
+                - front_female
+                - front_shiny
+                - front_shiny_female
+              properties:
+                front_default:
+                  type: string
+                  format: uri
+                  nullable: true
+                front_female:
+                  type: string
+                  format: uri
+                  nullable: true
+                front_shiny:
+                  type: string
+                  format: uri
+                  nullable: true
+                front_shiny_female:
+                  type: string
+                  format: uri
+                  nullable: true
+            official-artwork:
+              type: object
+              required:
+                - front_default
+                - front_female
+              properties:
+                front_default:
+                  type: string
+                  format: uri
+                  nullable: true
+                front_female:
+                  type: string
+                  format: uri
+                  nullable: true
+            versions:
+              type: object
+              required:
+                - generation-i
+                - generation-ii
+                - generation-iii
+              properties:
+                generation-i:
+                  type: object
+                  required:
+                    - red-blue
+                    - yellow
+                  properties:
+                    red-blue:
+                      type: object
+                      required:
+                        - back_default
+                        - back_gray
+                        - back_transparent
+                        - front_default
+                        - front_gray
+                        - front_transparent
+                      properties:
+                        back_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_gray:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_gray:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                    yellow:
+                      type: object
+                      required:
+                        - back_default
+                        - back_gray
+                        - back_transparent
+                        - front_default
+                        - front_gray
+                        - front_transparent
+                      properties:
+                        back_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_gray:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_gray:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                generation-ii:
+                  type: object
+                  required:
+                    - crystal
+                    - gold
+                    - silver
+                  properties:
+                    crystal:
+                      type: object
+                      required:
+                        - back_default
+                        - back_shiny
+                        - back_shiny_transparent
+                        - back_transparent
+                        - front_default
+                        - front_shiny
+                        - front_shiny_transparent
+                        - front_transparent
+                      properties:
+                        back_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_shiny_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_shiny_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                    gold:
+                      type: object
+                      required:
+                        - back_default
+                        - back_shiny
+                        - front_default
+                        - front_shiny
+                        - front_transparent
+                      properties:
+                        back_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                    silver:
+                      type: object
+                      required:
+                        - back_default
+                        - back_shiny
+                        - front_default
+                        - front_shiny
+                        - front_transparent
+                      properties:
+                        back_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_transparent:
+                          type: string
+                          format: uri
+                          nullable: true
+                generation-iii:
+                  type: object
+                  required:
+                    - emerald
+                    - firered-leafgreen
+                    - ruby-sapphire
+                  properties:
+                    emerald:
+                      type: object
+                      required:
+                        - front_default
+                        - front_shiny
+                      properties:
+                        front_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                    firered-leafgreen:
+                      type: object
+                      required:
+                        - back_default
+                        - back_shiny
+                        - front_default
+                        - front_shiny
+                      properties:
+                        back_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                    ruby-sapphire:
+                      type: object
+                      required:
+                        - back_default
+                        - back_shiny
+                        - front_default
+                        - front_shiny
+                      properties:
+                        back_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        back_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_default:
+                          type: string
+                          format: uri
+                          nullable: true
+                        front_shiny:
+                          type: string
+                          format: uri
+                          nullable: true
       required:
         - front_default
         - front_shiny
@@ -655,6 +974,7 @@ components:
         - back_shiny
         - back_female
         - back_shiny_female
+        - other
     Ability:
       type: object
       properties:
